@@ -1,8 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
-import { EmployeeInterface } from './api/Employee/interfaces/employee.interface';
+import { EmployeeInterface, UserPermission } from './api/Employee/interfaces/employee.interface';
 import { UtilService } from './api/Utils/utils.service';
 import * as Admin from './config/employee.default';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class AppService {
@@ -22,7 +23,11 @@ export class AppService {
    */
   async checkSuperAdminExists(): Promise<any> {
     try {
-      return await this.employeeModel.findOne({ $and: [{ employeeUserName: Admin.superAdminUsername }, { employeePassword: Admin.superAdminPassword }] })
+      const admin = await this.employeeModel.findOne({ userName: (Admin.superAdminUsername).toLocaleLowerCase() });
+      if(!admin) {
+        return false;
+      }
+      return admin;
     } catch (error) {
       throw error;
     }
@@ -35,12 +40,15 @@ export class AppService {
     try {
       // encrypt password 
       const decryptPassword = await this.utilService.passwordEncrypt(Admin.superAdminPassword);
+      // create superAdminRequest payload
       const superAdminRequest = {
-        employeeUserName: Admin.superAdminUsername,
-        employeePassword: decryptPassword,
-        employeeRoles: ['SUPER_ADMIN'],
-        employeeActions: ['*']
+        empUniqueId: uuid(),
+        userName: Admin.superAdminUsername,
+        password: decryptPassword,
+        roles: [Admin.superAdminRole],
+        permissions: [UserPermission.ADDITIONAL, UserPermission.CREATE, UserPermission.DELETE, UserPermission.EDIT, UserPermission.VIEW]
       }
+      // save super admin into employees collection
       const superAdmin = new this.employeeModel(superAdminRequest);
       return await superAdmin.save();
     } catch (error) {

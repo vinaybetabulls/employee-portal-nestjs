@@ -3,7 +3,7 @@ import { OrganizationSchema } from './schemas/organization.scheama';
 
 export const organizationProviders = [
   {
-    provide: 'COMPANY_MODEL',
+    provide: 'ORGANIZATION_MODEL',
     useFactory: (connection: Connection) => connection.model('Organization', OrganizationSchema),
     inject: ['DATABASE_CONNECTION'],
   },

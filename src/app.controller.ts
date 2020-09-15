@@ -13,11 +13,12 @@ export class AppController {
   async createSuperAdmin() {
     try {
       const isExists =  await this.appService.checkSuperAdminExists();
+      let superAdmin;
       if(!isExists) {
         // create super admin;
-        await this.appService.createSuperAdmin();
+        superAdmin = await this.appService.createSuperAdmin();
       }
-      return isExists;
+      return isExists || superAdmin;
     } catch (error) {
       return error;
     }

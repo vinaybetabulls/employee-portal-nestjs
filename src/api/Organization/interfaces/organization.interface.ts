@@ -15,10 +15,12 @@ export interface OrgContactPerson {
 }
 
 export interface OrganizationInterface extends Document {
+    orgUniqueId: string;
     readonly organizationName: string;
     readonly organizationCode: number;
-    readonly organizationAddress: OrgAddress;
+    readonly organizationAddress: OrgAddress[];
     readonly organizationContactPerosn: OrgContactPerson;
     readonly organizationEmail: string;
     readonly organizationPhone: string;
+    readonly organizationLogoURL: string;
 }

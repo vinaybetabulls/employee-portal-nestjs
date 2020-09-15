@@ -1,6 +1,6 @@
 import { Connection } from 'mongoose';
 import { EmployeeSchema } from './api/Employee/schemas/employee.schema'
-export const UserProviders = [
+export const EmployeeProviders = [
   {
     provide: 'EMPLOYEE_MODEL',
     useFactory: (connection: Connection) => connection.model('Employee', EmployeeSchema),

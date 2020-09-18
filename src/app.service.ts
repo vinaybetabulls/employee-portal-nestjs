@@ -29,7 +29,7 @@ export class AppService {
       }
       return admin;
     } catch (error) {
-      throw error;
+      throw error;;
     }
   }
 
@@ -52,7 +52,7 @@ export class AppService {
       const superAdmin = new this.employeeModel(superAdminRequest);
       return await superAdmin.save();
     } catch (error) {
-      throw error;
+      throw error;;
     }
   }
 }

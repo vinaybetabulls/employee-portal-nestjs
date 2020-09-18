@@ -20,7 +20,7 @@ export class AppController {
       }
       return isExists || superAdmin;
     } catch (error) {
-      return error;
+     throw error;
     }
   }
 }

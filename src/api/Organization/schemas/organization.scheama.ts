@@ -1,5 +1,8 @@
 import * as mongoose from 'mongoose';
 
+/**
+ * @name: OrganizationSchema
+ */
 export const OrganizationSchema = new mongoose.Schema({
   orgUniqueId: { type: String, required: true },
   organizationName: { type: String, required: true },
@@ -17,6 +20,10 @@ export const OrganizationSchema = new mongoose.Schema({
     name: String,
     phone: String
   },
-  organizationLogo: String
-
-});
+  organizationLogo: String,
+  isActive: { type: Boolean, default: true },
+  createdBy: {
+    empUniqueId: { type: String },
+    empUserName: { type: String }
+  }
+},{timestamps:{createdAt:'createdOn',updatedAt:'updatedOn'}});

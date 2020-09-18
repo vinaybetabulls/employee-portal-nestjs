@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { CompanyModule } from './api/Company/company.module';
 import { EmployeeModule } from './api/Employee/employee.module';
 import { OrganizationModule } from './api/Organization/organization.module';
 import { UtilModule } from './api/Utils/Utils.module';
@@ -10,7 +11,7 @@ import { DatabaseModule } from './database/database.module';
 import { databaseProviders } from './database/database.providers';
 
 @Module({
-  imports: [DatabaseModule, OrganizationModule, EmployeeModule, UtilModule],
+  imports: [DatabaseModule, OrganizationModule, EmployeeModule, UtilModule, CompanyModule],
   controllers: [AppController],
   providers: [AppService,UtilService,
   ...databaseProviders,

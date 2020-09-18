@@ -1,8 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { OrganizationRequestDto } from "./dto/organization.dto";
 import { v4 as uuid } from 'uuid';
-import * as fs from "fs";
-import * as path from 'path';
 import { OrganizationCommonService } from "./organization.common.service";
 
 
@@ -16,18 +14,85 @@ export class OrganizationService {
      * @param request 
      * @param file 
      */
-    async createOrganization(request: OrganizationRequestDto): Promise<any> {
+    async createOrganization(request: OrganizationRequestDto, user: any): Promise<any> {
         try {
             const orgUniqueId = uuid();
             // check organization already exists
             const isOrgExists = await this.commonService.isOrganizationExists(request.organizationCode);
-            if(isOrgExists) {
+            if (isOrgExists) {
                 throw new HttpException('Organization already exists', HttpStatus.CONFLICT);
             }
-            return await this.commonService.createOrganization(request, orgUniqueId);
+            return await this.commonService.createOrganization(request, orgUniqueId, user);
         } catch (error) {
             throw error;
         }
 
+    }
+
+    /**
+     * 
+     * @param pageNumber 
+     * @param pageLimit 
+     */
+    async listOfOrganizations(pageNumber: string, pageLimit: string): Promise<any> {
+        try {
+            return this.commonService.listOfOrganizations(pageNumber, pageLimit)
+        } catch (error) {
+            throw error;;
+        }
+    }
+
+    /**
+     * 
+     * @param empUniqId 
+     */
+    async getOrganizationByEmpId(empUniqId: string): Promise<any> {
+        try {
+            //TODO
+            return empUniqId;
+            /// return await this.commonService.getOrganizationByEmpId(empUniqId);
+        } catch (error) {
+            throw error;;
+        }
+    }
+
+    /**
+     * 
+     * @param orgId 
+     */
+    async getOrganizationByOrgId(orgId: string): Promise<any> {
+        try {
+            return await this.commonService.getOrganizationByOrgId(orgId);
+        } catch (error) {
+            throw error;;
+        }
+    }
+
+    /**
+     * 
+     * @param orgId 
+     */
+    async deleteOrganizationByOrgId(orgId: string): Promise<any> {
+        try {
+            // check organization exist or not
+            await this.commonService.getOrganizationByOrgId(orgId);
+            return await this.commonService.deleteOrganizationByOrgId(orgId);
+        } catch (error) {
+            throw error;;
+        }
+    }
+    /**
+     * 
+     * @param orgId 
+     */
+    async updateOrganizatonById(orgId: string): Promise<any> {
+        try {
+            // check organization exist or not
+            await this.commonService.getOrganizationByOrgId(orgId);
+            // udpate organization details byId
+            return await this.commonService.updateOrganizationbyOrgId(orgId);
+        } catch (error) {
+            throw error;;
+        }
     }
 }

@@ -26,4 +26,4 @@ export const OrganizationSchema = new mongoose.Schema({
     empUniqueId: { type: String },
     empUserName: { type: String }
   }
-},{timestamps:{createdAt:'createdOn',updatedAt:'updatedOn'}});
+}, { timestamps: { createdAt: 'createdOn', updatedAt: 'updatedOn' } });

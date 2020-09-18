@@ -1,12 +1,13 @@
 import { Body, Controller, Delete, Get, Headers, HttpException, HttpStatus, Param, Post, Put } from "@nestjs/common";
 import { ApiBody, ApiHeader, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import * as _ from "lodash";
-
-import { OrganizationRequestDto } from "./dto/organization.dto";
-import { OrganizationService } from "./organization.service";
-import { UtilService } from "../Utils/utils.service";
 import * as Admin from '../../config/employee.default';
 import { UserPermission } from "../Employee/interfaces/employee.interface";
+import { UtilService } from "../Utils/utils.service";
+import { OrganizationRequestDto } from "./dto/organization.dto";
+import { OrganizationService } from "./organization.service";
+
+
 
 @ApiTags('Organization')
 @Controller('organization')
@@ -29,7 +30,7 @@ export class OrganizationController {
             }
             return await this.organizationService.createOrganization(request, user);
         } catch (error) {
-           throw error;
+            throw error;
         }
     }
 
@@ -50,7 +51,7 @@ export class OrganizationController {
                 return this.organizationService.getOrganizationByEmpId(token.user.empUniqueId);
             }
         } catch (error) {
-           throw error;
+            throw error;
         }
     }
 
@@ -64,7 +65,7 @@ export class OrganizationController {
             return await this.organizationService.getOrganizationByOrgId(orgId);
 
         } catch (error) {
-           throw error;
+            throw error;
         }
     }
 
@@ -80,15 +81,15 @@ export class OrganizationController {
             }
             return await this.organizationService.deleteOrganizationByOrgId(orgId);
         } catch (error) {
-           throw error;
+            throw error;
         }
     }
 
     @Put('/:orgUniqueId')
-    @ApiOperation({summary: 'Update organization details'})
-    @ApiHeader({name: 'token', description:'authorization', required: true})
-    @ApiParam({name: 'orgUniqueid'})
-    async updateOrganizationById(@Headers('token') authorization, @Param('orgUniqueId') orgId){
+    @ApiOperation({ summary: 'Update organization details' })
+    @ApiHeader({ name: 'token', description: 'authorization', required: true })
+    @ApiParam({ name: 'orgUniqueid' })
+    async updateOrganizationById(@Headers('token') authorization, @Param('orgUniqueId') orgId) {
         try {
             const token = await this.utilService.validateJSONToken(authorization);
             if (token.user.username !== Admin.superAdminRole && !_.includes(token.user.permissions, UserPermission.EDIT, UserPermission.ADDITIONAL)) {
@@ -96,7 +97,7 @@ export class OrganizationController {
             }
             return await this.organizationService.updateOrganizatonById(orgId);
         } catch (error) {
-           throw error;
+            throw error;
         }
     }
 

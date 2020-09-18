@@ -13,8 +13,8 @@ import { databaseProviders } from './database/database.providers';
 @Module({
   imports: [DatabaseModule, OrganizationModule, EmployeeModule, UtilModule, CompanyModule],
   controllers: [AppController],
-  providers: [AppService,UtilService,
-  ...databaseProviders,
-  ...EmployeeProviders]
+  providers: [AppService, UtilService,
+    ...databaseProviders,
+    ...EmployeeProviders]
 })
-export class AppModule {}
+export class AppModule { }

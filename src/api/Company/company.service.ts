@@ -1,13 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { v4 as uuid } from 'uuid';
-
 import { CompanyCommonService } from "./company.common.service";
 import { CompanyRequestDto } from "./dto/company.request.dto";
 
 
+
 @Injectable()
 export class CompanyService {
-    constructor(private commonService: CompanyCommonService){}
+    constructor(private commonService: CompanyCommonService) { }
     /**
      * 
      * @param request 
@@ -15,10 +15,10 @@ export class CompanyService {
     async createCompany(request: CompanyRequestDto, user: any): Promise<any> {
         try {
             const companyUniqeId = uuid();
-            request.companyEmail = (request.companyEmail).toLocaleLowerCase(); 
+            request.companyEmail = (request.companyEmail).toLocaleLowerCase();
             // chcek company is already exists by company code
             const company = await this.commonService.checkCompanyExistsByCode(request.companyCode);
-            if(company) {
+            if (company) {
                 throw new HttpException('Company already exists', HttpStatus.CONFLICT);
             }
             return await this.commonService.createCompany(request, companyUniqeId, user)

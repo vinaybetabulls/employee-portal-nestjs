@@ -19,7 +19,7 @@ export class EmployeeService {
 
             // decrypt password
             const decryptPassword = await this.utilService.decryptPassword(request.password, checkuserExists.password);
-            if(!decryptPassword) {
+            if (!decryptPassword) {
                 throw new HttpException('Wrong password', HttpStatus.BAD_REQUEST)
             }
 
@@ -31,7 +31,7 @@ export class EmployeeService {
                 empUniqueId: checkuserExists.empUniqueId
             }
             const jwt = await this.utilService.generateJSONToken(jwtPayload);
-        return {jwt, roles: jwtPayload.roles, permissions: jwtPayload.permissions};
+            return { jwt, roles: jwtPayload.roles, permissions: jwtPayload.permissions };
 
         } catch (error) {
             throw error;

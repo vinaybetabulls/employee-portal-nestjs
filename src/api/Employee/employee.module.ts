@@ -11,8 +11,8 @@ import { EmployeeService } from './employee.service';
 @Module({
   imports: [DatabaseModule, UtilModule],
   controllers: [EmployeeController],
-  providers: [EmployeeService,UtilService, EmployeeCommonService,
-  ...databaseProviders,
-...EmployeeProviders]
+  providers: [EmployeeService, UtilService, EmployeeCommonService,
+    ...databaseProviders,
+    ...EmployeeProviders]
 })
-export class EmployeeModule {}
+export class EmployeeModule { }

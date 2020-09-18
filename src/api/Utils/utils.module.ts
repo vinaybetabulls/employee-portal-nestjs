@@ -7,4 +7,4 @@ import { UtilService } from "./utils.service";
     exports: [UtilService]
 })
 
-export class UtilModule{}
+export class UtilModule { }

@@ -17,7 +17,7 @@ export class EmployeeController {
         try {
             return await this.employeeService.employeeLogin(request);
         } catch (error) {
-           throw error;
+            throw error;
         }
     }
 }

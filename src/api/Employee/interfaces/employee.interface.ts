@@ -7,7 +7,7 @@ export enum UserPermission {
     CREATE = "CREATE",
     VIEW = "VIEW",
     DELETE = "DELETE",
-    EDIT ="EDIT",
+    EDIT = "EDIT",
     ADDITIONAL = "ADDITIONAL"
 }
 

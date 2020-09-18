@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { Model } from 'mongoose';
 import { OrganizationRequestDto } from "./dto/organization.dto";
-
 import { OrganizationInterface } from "./interfaces/organization.interface";
+
 
 @Injectable()
 
@@ -44,7 +44,7 @@ export class OrganizationCommonService {
         const orgResponse = await this.organizationModel.find({ isActive: true }).find({})
             .skip(skip)                 // use 'skip' first
             .limit(limit)
-        if(orgResponse.length === 0 ) {
+        if (orgResponse.length === 0) {
             throw new HttpException('No organizations found', HttpStatus.NOT_FOUND);
         }
         return {

@@ -139,9 +139,9 @@ export class EmployeeCreateDto {
     @IsString()
     panCardNumber: string;
 
-    @ApiProperty({ name: 'prfileImageURL', description: 'Employee prfileImageURL' })
+    @ApiProperty({ name: 'profileImageURL', description: 'Employee prfileImageURL' })
     @IsString()
-    prfileImageURL: string;
+    profileImageURL: string;
 
     @ApiProperty({ name: 'dateOfJoining', description: 'Employee dateOfJoining' })
     @IsString()

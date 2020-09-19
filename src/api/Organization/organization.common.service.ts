@@ -29,7 +29,7 @@ export class OrganizationCommonService {
      * @param organizationCode 
      */
     async isOrganizationExists(organizationCode: string) {
-        return this.organizationModel.findOne({ $and: [{ organizationCode: organizationCode }, { isActive: true }] })
+        return this.organizationModel.findOne({ organizationCode: organizationCode })
     }
 
     /**

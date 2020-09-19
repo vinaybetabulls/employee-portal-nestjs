@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { OrganizationRequestDto } from "./dto/organization.dto";
 import { v4 as uuid } from 'uuid';
+import { OrganizationRequestDto } from "./dto/organization.dto";
 import { OrganizationCommonService } from "./organization.common.service";
 
 

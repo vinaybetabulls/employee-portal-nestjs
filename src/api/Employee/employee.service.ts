@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { v4 as uuid } from 'uuid';
 import { UtilService } from "../Utils/utils.service";
-import { EmployeeLoginDto } from "./dto/employee.dto";
+import { EmployeeCreateDto, EmployeeLoginDto } from "./dto/employee.dto";
 import { EmployeeCommonService } from "./employee-common.service";
 
 
@@ -33,6 +34,29 @@ export class EmployeeService {
             const jwt = await this.utilService.generateJSONToken(jwtPayload);
             return { jwt, roles: jwtPayload.roles, permissions: jwtPayload.permissions };
 
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async createEmployee(request: EmployeeCreateDto, createdBy: any): Promise<any> {
+        try {
+            // check employee already existed
+            const emp = await this.commonService.checkEmployeeExists(request.email, request.empId, request.userName);
+            if (emp) {
+                throw new HttpException('Employee already existed', HttpStatus.CONFLICT)
+            }
+            const empUniqueId = uuid();
+            request.email = ((request.email).toLocaleLowerCase()).trim();
+            request.userName = ((request.userName).toLocaleLowerCase()).trim();
+            if (request.dateOfJoining && request.dateOfJoining !== '') {
+                request.dateOfJoining = new Date(request.dateOfJoining).toISOString();
+            }
+            if (request.dob && request.dob !== '') {
+                request.dob = new Date(request.dob).toISOString();
+            }
+
+            return this.commonService.createEmployee(request, createdBy, empUniqueId);
         } catch (error) {
             throw error;
         }

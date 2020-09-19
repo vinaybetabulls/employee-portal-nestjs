@@ -25,7 +25,7 @@ export const EmployeeSchema = new mongoose.Schema({
     motherTounge: { type: String },
     nationality: { type: String },
     maritalStatus: { type: String },
-    prfileImageURL: { type: String },
+    profileImageURL: { type: String },
     aadharCardNumber: { type: String },
     panCardNumber: { type: String },
 
@@ -35,4 +35,8 @@ export const EmployeeSchema = new mongoose.Schema({
     department: { id: { type: String }, name: { type: String } },
     empId: { type: String, required: true },
     empUniqueId: { type: String },
+    createdBy: {
+        empUniqueId: { type: String },
+        empUserName: { type: String }
+    }
 }, { timestamps: { createdAt: 'createdOn', updatedAt: 'updatedOn' } })

@@ -100,5 +100,4 @@ export class OrganizationController {
             throw error;
         }
     }
-
 }

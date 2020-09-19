@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { UtilService } from "../Utils/utils.service";
-import { EmployeeDto } from "./dto/employee.dto";
+import { EmployeeLoginDto } from "./dto/employee.dto";
 import { EmployeeCommonService } from "./employee-common.service";
 
 
@@ -10,7 +10,7 @@ import { EmployeeCommonService } from "./employee-common.service";
 export class EmployeeService {
     constructor(private commonService: EmployeeCommonService, private utilService: UtilService) { }
 
-    async employeeLogin(request: EmployeeDto): Promise<any> {
+    async employeeLogin(request: EmployeeLoginDto): Promise<any> {
         try {
             const checkuserExists = await this.commonService.checkUserAlreadyExists(request.username);
             if (!checkuserExists) {

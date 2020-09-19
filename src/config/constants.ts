@@ -9,7 +9,7 @@ interface VaraibaleInterface {
 
 const defaultConstants: VaraibaleInterface = {
     EMPLOYEE_PASSWORD: 'd3ltagamm@',
-    EMPLOYEE_ROLE: 'default',
+    EMPLOYEE_ROLE: 'DEFAULT',
     SUPER_ADMIN_USERNAME: 'superadmin',
     SUPER_ADMIN_PASSWORD: 'superadmin',
     DEFAULT_ACTION: 'view',

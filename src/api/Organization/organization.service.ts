@@ -48,9 +48,9 @@ export class OrganizationService {
      */
     async getOrganizationByEmpId(empUniqId: string): Promise<any> {
         try {
-            //TODO
-            return empUniqId;
-            /// return await this.commonService.getOrganizationByEmpId(empUniqId);
+            // get organization id by empId
+            const orgId = await this.commonService.getOrganizationIdByEmpId(empUniqId);
+            return await this.commonService.getOrganizationByOrgId(orgId);
         } catch (error) {
             throw error;;
         }

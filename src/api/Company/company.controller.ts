@@ -47,7 +47,8 @@ export class CompanyController {
                 return this.companyService.getCompaniesList(pageNumber, pageLimit);
             }
             else {
-                return new HttpException('Not implemented', HttpStatus.NOT_IMPLEMENTED);
+                const empId = token.user.empUniqueId;
+                return await this.companyService.getCompanyByEmpId(empId);
                 // get organizations for particular employee
                 // TOD
                 // return this.organizationService.getOrganizationByEmpId(token.user.empUniqueId);

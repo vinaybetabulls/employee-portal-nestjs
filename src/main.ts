@@ -1,13 +1,13 @@
-import 'dotenv/config';
-import { NestFactory } from '@nestjs/core';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import 'dotenv/config';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   try {
     const app = await NestFactory.create(AppModule);
-
+    app.enableCors(); // protection
     const options = new DocumentBuilder()
       .setTitle('Employee Portal')
       .setDescription('The Employee Portal')

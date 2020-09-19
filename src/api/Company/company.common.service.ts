@@ -1,12 +1,13 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { Model } from 'mongoose';
+import { EmployeeInterface } from "../Employee/interfaces/employee.interface";
 import { CompanyRequestDto } from "./dto/company.request.dto";
-
 import { CompanyInterface } from "./interfaces/company.interface";
+
 
 @Injectable()
 export class CompanyCommonService {
-    constructor(@Inject('COMPANY_MODEL') private companyModel: Model<CompanyInterface>) { }
+    constructor(@Inject('COMPANY_MODEL') private companyModel: Model<CompanyInterface>, @Inject('EMPLOYEE_MODEL') private empModel: Model<EmployeeInterface>) { }
 
     /**
      * 
@@ -74,5 +75,18 @@ export class CompanyCommonService {
             return 'Company deleted successfully'
         }
         return 'Failed to delete organization'
+    }
+
+    /**
+     * 
+     * @param empId 
+     */
+    async getCompanyIdOfEmp(empId: string) {
+        const { company: { id } } = await this.empModel.findOne({ empUniqueId: empId }, { company: 1, _id: 0 })
+        console.log('company..', id)
+        if (!id) {
+            throw new HttpException('No companies found for employee', HttpStatus.NOT_FOUND);
+        }
+        return id;
     }
 }

@@ -25,6 +25,14 @@ export class EmpWorkExp {
     months: number;
 }
 
+export class EmpOrganization {
+    @ApiProperty({ name: 'id', description: 'Organization uniqueId' })
+    @IsString()
+    id: string;
+    @ApiProperty({ name: 'name', description: 'Organization name' })
+    @IsString()
+    name: string;
+}
 export class EmpCompany {
     @ApiProperty({ name: 'id', description: 'Company uniqueId' })
     @IsString()
@@ -142,6 +150,11 @@ export class EmployeeCreateDto {
     @ApiProperty({ name: 'dateOfJoining', description: 'Employee dateOfJoining', type: Date })
     @IsString()
     dateOfJoining: string;
+
+
+    @ApiProperty({ name: 'organization', description: 'Employee organization', type: EmpOrganization })
+    @IsNotEmptyObject()
+    organization: EmpOrganization;
 
     @ApiProperty({ name: 'company', description: 'Employee company', type: EmpCompany })
     @IsNotEmptyObject()

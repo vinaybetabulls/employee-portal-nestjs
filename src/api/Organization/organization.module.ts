@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { EmployeeProviders } from 'src/app.provider';
 import { DatabaseModule } from 'src/database/database.module';
 import { UtilModule } from '../Utils/Utils.module';
 import { UtilService } from '../Utils/utils.service';
@@ -12,7 +13,8 @@ import { OrganizationService } from './organization.service';
   controllers: [OrganizationController],
   providers: [
     OrganizationService, UtilService, OrganizationCommonService,
-    ...organizationProviders
+    ...organizationProviders,
+    ...EmployeeProviders
   ]
 })
 export class OrganizationModule { }

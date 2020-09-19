@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { Model } from 'mongoose';
+import { EmployeeInterface } from "../Employee/interfaces/employee.interface";
 import { OrganizationRequestDto } from "./dto/organization.dto";
 import { OrganizationInterface } from "./interfaces/organization.interface";
 
@@ -10,6 +11,7 @@ export class OrganizationCommonService {
     constructor(
         @Inject('ORGANIZATION_MODEL')
         private organizationModel: Model<OrganizationInterface>,
+        @Inject('EMPLOYEE_MODEL') private empModel: Model<EmployeeInterface>
     ) { }
     /**
      * 
@@ -60,6 +62,7 @@ export class OrganizationCommonService {
      * @param orgId 
      */
     async getOrganizationByOrgId(orgId: string) {
+        console.log('orgUniqueId...', orgId);
         const org = await this.organizationModel.findOne({ $and: [{ orgUniqueId: orgId }, { isActive: true }] });
         if (!org) {
             throw new HttpException('Organization not existed', HttpStatus.NOT_FOUND);
@@ -86,6 +89,13 @@ export class OrganizationCommonService {
     async updateOrganizationbyOrgId(orgId: string) {
         // Todo
         return orgId;
+    }
 
+    async getOrganizationIdByEmpId(empId: string) {
+        const { organization: { id } } = await this.empModel.findOne({ empUniqueId: empId }, { organization: 1, _id: 0 });
+        if (!id) {
+            throw new HttpException('No organizations found for employee', HttpStatus.NOT_FOUND);
+        }
+        return id;
     }
 }

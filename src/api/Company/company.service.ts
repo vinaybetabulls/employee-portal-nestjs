@@ -52,12 +52,27 @@ export class CompanyService {
         }
     }
 
+    /**
+     * 
+     * @param companyId 
+     */
     async deleteCompanyById(companyId: string): Promise<any> {
         try {
             // check company exists or not
             await this.commonService.getCompanyById(companyId);
             // delete company
             return this.commonService.deleteCompanyById(companyId)
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getCompanyByEmpId(empId: string) {
+        try {
+            // get companyId
+            const companyId = await this.commonService.getCompanyIdOfEmp(empId);
+            return await this.commonService.getCompanyById(companyId);
+
         } catch (error) {
             throw error;
         }

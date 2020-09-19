@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { v4 as uuid } from 'uuid';
 import * as Employee from '../../config/employee.default';
 import { UtilService } from "../Utils/utils.service";
+import { ChangePasswordDto } from "./dto/employee-change-pwd.dto";
 import { EmployeeCreateDto, EmployeeLoginDto } from "./dto/employee.dto";
 import { EmployeeCommonService } from "./employee-common.service";
 
@@ -59,6 +60,40 @@ export class EmployeeService {
             }
             const decryptPassword = await this.utilService.passwordEncrypt(Employee.employeePassword);
             return this.commonService.createEmployee(request, createdBy, empUniqueId, decryptPassword);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * 
+     * @param empId 
+     */
+    async getEmployeeById(empId: string) {
+        try {
+            return await this.commonService.getEmployeeById(empId);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * 
+     * @param request 
+     * @param empId 
+     */
+    async updatePassword(request: ChangePasswordDto, empId: string) {
+        try {
+            if (request.newPassword !== request.confirmPassword) {
+                throw new HttpException('New password and confirm password should match', HttpStatus.BAD_REQUEST)
+            }
+            const empResponse = await this.commonService.getEmployeeById(empId);
+            const decryptOldPassword = this.utilService.decryptPassword(request.oldPassowrd, empResponse.password);
+            if (!decryptOldPassword) {
+                throw new HttpException('Old password not matched', HttpStatus.BAD_REQUEST);
+            }
+            const encryptNewPassword = await this.utilService.passwordEncrypt(request.newPassword);
+            return await this.commonService.updatePassword(encryptNewPassword, empId);
         } catch (error) {
             throw error;
         }

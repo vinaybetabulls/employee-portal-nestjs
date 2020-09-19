@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { Model } from 'mongoose';
 import { EmployeeInterface } from "./interfaces/employee.interface";
 
@@ -50,5 +50,24 @@ export class EmployeeCommonService {
         } catch (error) {
             throw error;
         }
+    }
+
+    /**
+     * 
+     * @param empId 
+     */
+    async getEmployeeById(empId: string) {
+        const emp = await this.employeeModel.findOne({ empUniqueId: empId });
+        if (!emp) throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
+        return emp;
+    }
+
+    /**
+     * 
+     * @param newPassowrd 
+     * @param empId 
+     */
+    async updatePassword(newPassowrd: string, empId: string) {
+        return await this.employeeModel.updateOne({ empUniqueId: empId }, { $set: { password: newPassowrd, isFirstTimeLogin: false } });
     }
 }

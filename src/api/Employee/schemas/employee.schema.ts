@@ -30,6 +30,7 @@ export const EmployeeSchema = new mongoose.Schema({
     panCardNumber: { type: String },
 
     dateOfJoining: { type: Date },
+    organization: { id: { type: String }, name: { type: String } },
     company: { id: { type: String }, name: { type: String } },
     designation: { id: { type: String }, name: { type: String } },
     department: { id: { type: String }, name: { type: String } },

@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { v4 as uuid } from 'uuid';
+import * as Employee from '../../config/employee.default';
 import { UtilService } from "../Utils/utils.service";
 import { EmployeeCreateDto, EmployeeLoginDto } from "./dto/employee.dto";
 import { EmployeeCommonService } from "./employee-common.service";
@@ -29,7 +30,8 @@ export class EmployeeService {
                 username: checkuserExists.userName,
                 roles: checkuserExists.roles,
                 permissions: checkuserExists.permissions,
-                empUniqueId: checkuserExists.empUniqueId
+                empUniqueId: checkuserExists.empUniqueId,
+                isfirstTimeLogin: (checkuserExists.isFirstTimeLogin === true) ? true : undefined
             }
             const jwt = await this.utilService.generateJSONToken(jwtPayload);
             return { jwt, roles: jwtPayload.roles, permissions: jwtPayload.permissions };
@@ -55,8 +57,8 @@ export class EmployeeService {
             if (request.dob && request.dob !== '') {
                 request.dob = new Date(request.dob).toISOString();
             }
-
-            return this.commonService.createEmployee(request, createdBy, empUniqueId);
+            const decryptPassword = await this.utilService.passwordEncrypt(Employee.employeePassword);
+            return this.commonService.createEmployee(request, createdBy, empUniqueId, decryptPassword);
         } catch (error) {
             throw error;
         }

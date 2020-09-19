@@ -71,10 +71,6 @@ export class EmployeeCreateDto {
     @IsString()
     email!: string;
 
-    @ApiProperty({ name: 'password', description: 'Employee password' })
-    @IsString()
-    password!: string;
-
     @ApiProperty({ name: 'phone', description: 'Employee phone number' })
     @IsString()
     phone!: string;
@@ -107,7 +103,7 @@ export class EmployeeCreateDto {
     @IsNotEmptyObject()
     workExperience!: EmpWorkExp;
 
-    @ApiProperty({ name: 'dob', description: 'Employee Dateofbirth' })
+    @ApiProperty({ name: 'dob', description: 'Employee Dateofbirth', type: Date })
     @IsString()
     dob: string;
 
@@ -143,7 +139,7 @@ export class EmployeeCreateDto {
     @IsString()
     profileImageURL: string;
 
-    @ApiProperty({ name: 'dateOfJoining', description: 'Employee dateOfJoining' })
+    @ApiProperty({ name: 'dateOfJoining', description: 'Employee dateOfJoining', type: Date })
     @IsString()
     dateOfJoining: string;
 

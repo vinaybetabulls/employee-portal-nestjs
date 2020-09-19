@@ -1,5 +1,5 @@
 import { Body, Controller, Headers, HttpException, HttpStatus, Post } from "@nestjs/common";
-import { ApiBody, ApiProperty, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiHeader, ApiProperty, ApiTags } from "@nestjs/swagger";
 import * as _ from "lodash";
 import * as Admin from '../../config/employee.default';
 import { UtilService } from "../Utils/utils.service";
@@ -28,6 +28,7 @@ export class EmployeeController {
     @ApiProperty({ description: 'Create Employee' })
     @Post('/create')
     @ApiBody({ type: EmployeeCreateDto, description: 'Employee creation' })
+    @ApiHeader({ name: 'token', description: 'authorization', required: true })
     async createEmployee(@Headers('token') authorization, @Body() request) {
         try {
             const token = await this.utilService.validateJSONToken(authorization);
@@ -36,7 +37,8 @@ export class EmployeeController {
             }
             const user = {
                 empUserName: token.user.username,
-                empUniqueId: token.user.empUniqueId
+                empUniqueId: token.user.empUniqueI
+
             }
             return await this.employeeService.createEmployee(request, user);
 

@@ -62,7 +62,6 @@ export class OrganizationCommonService {
      * @param orgId 
      */
     async getOrganizationByOrgId(orgId: string) {
-        console.log('orgUniqueId...', orgId);
         const org = await this.organizationModel.findOne({ $and: [{ orgUniqueId: orgId }, { isActive: true }] });
         if (!org) {
             throw new HttpException('Organization not existed', HttpStatus.NOT_FOUND);

@@ -12,7 +12,7 @@ const defaultConstants: VaraibaleInterface = {
     EMPLOYEE_ROLE: 'DEFAULT',
     SUPER_ADMIN_USERNAME: 'superadmin',
     SUPER_ADMIN_PASSWORD: 'superadmin',
-    DEFAULT_ACTION: 'view',
+    DEFAULT_ACTION: 'VIEW',
     SUPER_ADMIN_ROLE: 'SUPER_ADMIN'
 }
 

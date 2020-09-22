@@ -6,7 +6,8 @@ export interface JwtInterface {
     username: string,
     roles: string[],
     permissions: string[],
-    empUniqueId: string
+    empUniqueId: string,
+    isFirstTimeLogin: boolean
 
 }
 

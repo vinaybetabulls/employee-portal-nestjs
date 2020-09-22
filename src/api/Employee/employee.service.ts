@@ -32,10 +32,16 @@ export class EmployeeService {
                 roles: checkuserExists.roles,
                 permissions: checkuserExists.permissions,
                 empUniqueId: checkuserExists.empUniqueId,
-                isfirstTimeLogin: (checkuserExists.isFirstTimeLogin === true) ? true : undefined
+                isFirstTimeLogin: false
+            }
+            if (checkuserExists.userName === 'superadmin') {
+                jwtPayload.isFirstTimeLogin = false;
+            }
+            else if (checkuserExists.isFirstTimeLogin === true && checkuserExists.userName !== 'superadmin') {
+                jwtPayload.isFirstTimeLogin = true;
             }
             const jwt = await this.utilService.generateJSONToken(jwtPayload);
-            return { jwt, roles: jwtPayload.roles, permissions: jwtPayload.permissions };
+            return { jwt, roles: jwtPayload.roles, permissions: jwtPayload.permissions, isFirstTimeLogin: jwtPayload.isFirstTimeLogin };
 
         } catch (error) {
             throw error;

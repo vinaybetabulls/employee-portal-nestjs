@@ -71,7 +71,7 @@ export class EmployeeController {
             if (token.user.empUniqueId !== empId) {
                 throw new HttpException('Access denied', HttpStatus.UNAUTHORIZED)
             }
-            return await this.employeeService.updatePassword(request, token.user.empUniqueId);
+            return await this.employeeService.updatePassword(request, empId);
         } catch (error) {
             throw error;
         }

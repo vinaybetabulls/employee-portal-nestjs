@@ -94,7 +94,7 @@ export class EmployeeService {
                 throw new HttpException('New password and confirm password should match', HttpStatus.BAD_REQUEST)
             }
             const empResponse = await this.commonService.getEmployeeById(empId);
-            const decryptOldPassword = this.utilService.decryptPassword(request.oldPassowrd, empResponse.password);
+            const decryptOldPassword = this.utilService.decryptPassword(request.oldPassword, empResponse.password);
             if (!decryptOldPassword) {
                 throw new HttpException('Old password not matched', HttpStatus.BAD_REQUEST);
             }

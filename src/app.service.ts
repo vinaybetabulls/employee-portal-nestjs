@@ -43,6 +43,7 @@ export class AppService {
       // create superAdminRequest payload
       const superAdminRequest = {
         empUniqueId: uuid(),
+        empId: 'SUPERADMIN',
         userName: Admin.superAdminUsername,
         password: decryptPassword,
         roles: [Admin.superAdminRole],

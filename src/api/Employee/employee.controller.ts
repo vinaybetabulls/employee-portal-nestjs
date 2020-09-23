@@ -5,6 +5,7 @@ import * as Admin from '../../config/employee.default';
 import { UtilService } from "../Utils/utils.service";
 import { ChangePasswordDto } from "./dto/employee-change-pwd.dto";
 import { EmployeeCreateDto, EmployeeLoginDto } from "./dto/employee.dto";
+import { EmployeePermissionsDto } from "./dto/employee.permissions.dto";
 import { EmployeeService } from "./employee.service";
 import { UserPermission } from "./interfaces/employee.interface";
 
@@ -61,17 +62,40 @@ export class EmployeeController {
         }
     }
 
-    @Put('updatePassword/:empId')
-    @ApiParam({ name: 'empId', description: 'Employee unique Id' })
+    @Put('updatePassword/:empUniqId')
+    @ApiParam({ name: 'empUniqId', description: 'Employee unique Id' })
     @ApiBody({ type: ChangePasswordDto, description: 'Employee passowrd request' })
     @ApiHeader({ name: 'token', description: 'authorization', required: true })
-    async updateEmpPassword(@Headers('token') authorization, @Body() request, @Param('empId') empId) {
+    async updateEmpPassword(@Headers('token') authorization, @Body() request, @Param('empUniqId') empId) {
         try {
             const token = await this.utilService.validateJSONToken(authorization);
             if (token.user.empUniqueId !== empId) {
                 throw new HttpException('Access denied', HttpStatus.UNAUTHORIZED)
             }
             return await this.employeeService.updatePassword(request, empId);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    @Put('updatePermissionRoles/:empUniqId')
+    @ApiParam({ name: 'empUniqId', description: 'EMployee unique Id' })
+    @ApiBody({ type: EmployeePermissionsDto, description: 'Update Employee permission and roles erquest' })
+    @ApiHeader({ name: 'token', description: 'authorization', required: true })
+    async updateEmpPermissionsRoles(@Headers('token') authorization, @Body() request, @Param('empUniqId') empId) {
+        try {
+            const token = await this.utilService.validateJSONToken(authorization);
+            if (token.user.username !== Admin.superAdminRole && !_.includes(token.user.permissions, UserPermission.EDIT, UserPermission.ADDITIONAL)) {
+                throw new HttpException('Authorization', HttpStatus.FORBIDDEN)
+            }
+            // const user = {
+            //     empUserName: token.user.username,
+            //     empUniqueId: token.user.empUniqueId
+
+            // }
+            console.log(request.permissions);
+            console.log(request.roles)
+            return await this.employeeService.updateEmpPermissions(request.permissions, request.roles, empId);
         } catch (error) {
             throw error;
         }

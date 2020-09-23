@@ -70,4 +70,23 @@ export class EmployeeCommonService {
     async updatePassword(newPassowrd: string, empId: string) {
         return await this.employeeModel.updateOne({ empUniqueId: empId }, { $set: { password: newPassowrd, isFirstTimeLogin: false } });
     }
+
+    /**
+     * 
+     * @param permissions 
+     * @param roles 
+     * @param empId 
+     */
+    async updateEmpPermissions(permissions: string[], roles: string[], empId: string) {
+        try {
+            console.log('permissions..', permissions);
+            console.log('roles..', roles);
+            await this.employeeModel.updateOne({ empUniqueId: empId }, { "$addToSet": { "permissions": { "$each": permissions } } })
+            return await this.employeeModel.updateOne({ empUniqueId: empId }, { "$addToSet": { "roles": { "$each": roles } } })
+
+        } catch (error) {
+            console.log('update emp permissions..', error);
+            throw error;
+        }
+    }
 }

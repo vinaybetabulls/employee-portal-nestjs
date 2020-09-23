@@ -104,4 +104,22 @@ export class EmployeeService {
             throw error;
         }
     }
+
+    /**
+     * 
+     * @param permission 
+     * @param roles 
+     * @param empId 
+     */
+    async updateEmpPermissions(permission: string[], roles: string[], empId: string) {
+        try {
+            // check empId is valid or not
+            await this.commonService.getEmployeeById(empId);
+            // update permissions and roles
+            return await this.commonService.updateEmpPermissions(permission, roles, empId);
+
+        } catch (error) {
+            throw error;
+        }
+    }
 }

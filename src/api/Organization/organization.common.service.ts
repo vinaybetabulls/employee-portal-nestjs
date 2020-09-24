@@ -52,7 +52,7 @@ export class OrganizationCommonService {
         return {
             pageNo: pageNumber,
             pageLimit: limit,
-            totalOrganizations: orgResponse.length,
+            totalCompanies: orgResponse.length,
             organizations: orgResponse
         }
     }
@@ -69,9 +69,10 @@ export class OrganizationCommonService {
         return {
             pageNo: 1,
             pageLimit: 10,
-            totalOrganizations: 1,
-            organizations: org
+            totalCompanies: 1,
+            organizations: [org]
         }
+        return org;
     }
 
     /**

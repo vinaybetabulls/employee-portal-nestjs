@@ -20,7 +20,7 @@ export const OrganizationSchema = new mongoose.Schema({
     name: String,
     phone: String
   },
-  organizationLogo: String,
+  organizationLogoURL: String,
   isActive: { type: Boolean, default: true },
   createdBy: {
     empUniqueId: { type: String },

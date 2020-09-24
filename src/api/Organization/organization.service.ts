@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { v4 as uuid } from 'uuid';
 import { OrganizationRequestDto } from "./dto/organization.dto";
 import { OrganizationCommonService } from "./organization.common.service";
+import * as fs from 'fs';
 
 
 @Injectable()
@@ -14,14 +15,18 @@ export class OrganizationService {
      * @param request 
      * @param file 
      */
-    async createOrganization(request: OrganizationRequestDto, user: any): Promise<any> {
+    async createOrganization(request: OrganizationRequestDto, user: any, file: Buffer): Promise<any> {
         try {
             const orgUniqueId = uuid();
             // check organization already exists
+            if (file) {
+                fs.writeFileSync(`${orgUniqueId}.jpg`, file);
+            }
             const isOrgExists = await this.commonService.isOrganizationExists(request.organizationCode);
             if (isOrgExists) {
                 throw new HttpException('Organization already exists', HttpStatus.CONFLICT);
             }
+            request.organizationLogoURL = `${orgUniqueId}.jpg`;
             return await this.commonService.createOrganization(request, orgUniqueId, user);
         } catch (error) {
             throw error;
@@ -49,8 +54,9 @@ export class OrganizationService {
     async getOrganizationByEmpId(empUniqId: string): Promise<any> {
         try {
             // get organization id by empId
+            const orgArray = []
             const orgId = await this.commonService.getOrganizationIdByEmpId(empUniqId);
-            return await this.commonService.getOrganizationByOrgId(orgId);
+            return orgArray.push(await this.commonService.getOrganizationByOrgId(orgId));
         } catch (error) {
             throw error;;
         }

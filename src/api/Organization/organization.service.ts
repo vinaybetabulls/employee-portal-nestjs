@@ -15,13 +15,10 @@ export class OrganizationService {
      * @param request 
      * @param file 
      */
-    async createOrganization(request: OrganizationRequestDto, user: any, file: Buffer): Promise<any> {
+    async createOrganization(request: OrganizationRequestDto, user: any): Promise<any> {
         try {
             const orgUniqueId = uuid();
             // check organization already exists
-            if (file) {
-                fs.writeFileSync(`${orgUniqueId}.jpg`, file);
-            }
             const isOrgExists = await this.commonService.isOrganizationExists(request.organizationCode);
             if (isOrgExists) {
                 throw new HttpException('Organization already exists', HttpStatus.CONFLICT);

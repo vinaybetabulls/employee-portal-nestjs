@@ -52,7 +52,7 @@ export class OrganizationCommonService {
         return {
             pageNo: pageNumber,
             pageLimit: limit,
-            totalCompanies: orgResponse.length,
+            totalOrganizations: orgResponse.length,
             organizations: orgResponse
         }
     }
@@ -66,7 +66,12 @@ export class OrganizationCommonService {
         if (!org) {
             throw new HttpException('Organization not existed', HttpStatus.NOT_FOUND);
         }
-        return org;
+        return {
+            pageNo: 1,
+            pageLimit: 10,
+            totalOrganizations: 1,
+            organizations: org
+        }
     }
 
     /**

@@ -58,7 +58,7 @@ export class CompanyCommonService {
      * @param companyId 
      */
     async getCompanyById(companyId: string) {
-        const company = await this.companyModel.findOne({ $and: [{ companyUniqeId: companyId }, { isActive: true }] });
+        const company = await this.companyModel.find({ $and: [{ companyUniqeId: companyId }, { isActive: true }] });
         if (!company) {
             throw new HttpException('Company not existed', HttpStatus.NOT_FOUND);
         }

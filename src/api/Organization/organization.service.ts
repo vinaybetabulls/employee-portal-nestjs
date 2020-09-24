@@ -53,7 +53,9 @@ export class OrganizationService {
             // get organization id by empId
             const orgArray = []
             const orgId = await this.commonService.getOrganizationIdByEmpId(empUniqId);
-            return orgArray.push(await this.commonService.getOrganizationByOrgId(orgId));
+            const orgResponse = await this.commonService.getOrganizationByOrgId(orgId);
+            orgArray.push(orgResponse);
+            return orgArray;
         } catch (error) {
             throw error;;
         }

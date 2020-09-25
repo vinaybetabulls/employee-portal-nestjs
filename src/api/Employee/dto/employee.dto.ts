@@ -16,6 +16,26 @@ export class EmployeeLoginDto {
 //     'Full Time',
 //     'Part Time'
 // }
+
+export class EmploayeeAddress {
+    @IsString()
+    @ApiProperty({ name: 'address', description: 'address', example: '#123, Building 20, Mindspace' })
+    address!: string;
+    @IsString()
+    @ApiProperty({ name: 'city', description: 'City' })
+    city!: string;
+    @IsString()
+    @ApiProperty({ name: 'state', description: 'State' })
+    state!: string;
+    @IsString()
+    @ApiProperty({ name: 'country', description: 'Country' })
+    country!: string;
+    @IsString()
+    @ApiProperty({ name: 'zipcode', description: 'Zipcode' })
+    zipcode!: string;
+}
+
+
 export class EmpWorkExp {
     @ApiProperty({ name: 'years', description: 'Employee exp in years' })
     @IsNumber()
@@ -177,5 +197,8 @@ export class EmployeeCreateDto {
     @IsString()
     empId!: string
 
+    @IsArray()
+    @ApiProperty({ name: 'employeeAddress', description: 'Company Address', type: [EmploayeeAddress] })
+    employeeAddress!: EmploayeeAddress
 
 }

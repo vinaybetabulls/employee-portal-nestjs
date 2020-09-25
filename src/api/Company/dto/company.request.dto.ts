@@ -68,7 +68,6 @@ export class CompanyRequestDto {
     @ApiProperty({ name: 'companyLogoURL', description: 'Company Logo URL' })
     companyLogoURL!: string;
 
-    @IsString()
     @ApiProperty({ name: 'rulesAndRegulationsURL', description: 'Company Rules and Regulation doc URL', required: false })
-    rulesAndRegulationsURL: string
+    rulesAndRegulationsURL?: string
 }

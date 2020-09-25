@@ -62,7 +62,12 @@ export class CompanyCommonService {
         if (!company) {
             throw new HttpException('Company not existed', HttpStatus.NOT_FOUND);
         }
-        return company;
+        return {
+            pageNo: 1,
+            pageLimit: 10,
+            totalCompanies: company.length,
+            companies: company
+        };
     }
 
     /**

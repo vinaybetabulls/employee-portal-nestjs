@@ -75,7 +75,8 @@ export class CompanyCommonService {
      * @param companyId 
      */
     async deleteCompanyById(companyId: string) {
-        const updated = await this.companyModel.updateOne({ orgUniqueId: companyId }, { $set: { isActive: false } });
+        console.log('companyId..', companyId)
+        const updated = await this.companyModel.updateOne({ companyUniqeId: companyId }, { $set: { isActive: false } });
         if (updated.ok) {
             return 'Company deleted successfully'
         }

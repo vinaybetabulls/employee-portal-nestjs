@@ -67,12 +67,28 @@ export class CompanyService {
         }
     }
 
+    /**
+     * 
+     * @param empId 
+     */
     async getCompanyByEmpId(empId: string) {
         try {
             // get companyId
             const companyId = await this.commonService.getCompanyIdOfEmp(empId);
             return await this.commonService.getCompanyById(companyId);
 
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * 
+     * @param orgUniqId 
+     */
+    async getCompaniesByOrgId(orgUniqId: string) {
+        try {
+            return await this.commonService.getCompaniesByOrgId(orgUniqId);
         } catch (error) {
             throw error;
         }

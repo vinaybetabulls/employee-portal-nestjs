@@ -94,4 +94,12 @@ export class CompanyCommonService {
         }
         return id;
     }
+
+    /**
+     * 
+     * @param orgUniqgId 
+     */
+    async getCompaniesByOrgId(orgUniqgId: string) {
+        return await this.empModel.find({ companyOrganizationId: orgUniqgId });
+    }
 }

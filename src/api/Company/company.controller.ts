@@ -87,4 +87,17 @@ export class CompanyController {
             throw error;
         }
     }
+
+    @Get('/:orgUniqId')
+    @ApiOperation({ summary: 'Get companies based on organization' })
+    @ApiHeader({ name: 'token', description: 'authorization', required: true })
+    @ApiParam({ name: 'orgUniqId', required: true })
+    async getComapniesByOrgId(@Headers('token') authorization, @Param('orgUniqId') orgUniqId) {
+        try {
+            await this.utilService.validateJSONToken(authorization);
+            return await this.companyService.getCompaniesByOrgId(orgUniqId);
+        } catch (error) {
+            throw error;
+        }
+    }
 }

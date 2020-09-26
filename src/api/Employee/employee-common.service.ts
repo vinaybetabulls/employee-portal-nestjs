@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { Model } from 'mongoose';
+import { CompanyInterface } from "../Company/interfaces/company.interface";
 import { EmployeeInterface } from "./interfaces/employee.interface";
 
 
@@ -9,6 +10,8 @@ export class EmployeeCommonService {
     constructor(
         @Inject('EMPLOYEE_MODEL')
         private employeeModel: Model<EmployeeInterface>,
+        @Inject('COMPANY_MODEL')
+        private companyModel: Model<CompanyInterface>
     ) { }
 
     /**
@@ -86,6 +89,18 @@ export class EmployeeCommonService {
 
         } catch (error) {
             console.log('update emp permissions..', error);
+            throw error;
+        }
+    }
+
+    /**
+     * 
+     * @param companyUniqeId 
+     */
+    async getCompanyImageURL(companyUniqeId: string) {
+        try {
+            return await this.companyModel.findOne({ companyUniqeId: companyUniqeId }, { companyLogoURL: 1 })
+        } catch (error) {
             throw error;
         }
     }

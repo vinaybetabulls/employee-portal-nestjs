@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { EmployeeProviders } from 'src/app.provider';
 import { DatabaseModule } from 'src/database/database.module';
 import { databaseProviders } from 'src/database/database.providers';
+import { companyProviders } from '../Company/company.provider';
 import { UtilModule } from '../Utils/utils.module';
 import { UtilService } from '../Utils/utils.service';
 import { EmployeeCommonService } from './employee-common.service';
@@ -13,6 +14,7 @@ import { EmployeeService } from './employee.service';
   controllers: [EmployeeController],
   providers: [EmployeeService, UtilService, EmployeeCommonService,
     ...databaseProviders,
-    ...EmployeeProviders]
+    ...EmployeeProviders,
+    ...companyProviders]
 })
 export class EmployeeModule { }

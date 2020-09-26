@@ -198,7 +198,7 @@ export class EmployeeCreateDto {
     empId!: string
 
     @IsArray()
-    @ApiProperty({ name: 'employeeAddress', description: 'Company Address', type: [EmploayeeAddress] })
+    @ApiProperty({ name: 'employeeAddress', description: 'Company Address', type: EmploayeeAddress })
     employeeAddress!: EmploayeeAddress
 
 }

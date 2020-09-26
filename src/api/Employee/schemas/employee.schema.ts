@@ -23,13 +23,13 @@ export const EmployeeSchema = new mongoose.Schema({
     fathersName: { type: String },
     gender: { type: String },
     motherTounge: { type: String },
-    employeeAddress: [{
+    employeeAddress: {
         address: String,
         city: String,
         state: String,
         country: String,
         zipcode: Number
-    }],
+    },
     nationality: { type: String },
     maritalStatus: { type: String },
     profileImageURL: { type: String },

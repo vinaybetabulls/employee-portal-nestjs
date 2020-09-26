@@ -101,6 +101,6 @@ export class CompanyCommonService {
      * @param orgUniqgId 
      */
     async getCompaniesByOrgId(orgUniqgId: string) {
-        return await this.empModel.find({ companyOrganizationId: orgUniqgId });
+        return await this.companyModel.find({ companyOrganizationId: orgUniqgId });
     }
 }

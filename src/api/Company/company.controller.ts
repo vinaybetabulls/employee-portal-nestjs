@@ -88,7 +88,7 @@ export class CompanyController {
         }
     }
 
-    @Get('/:orgUniqId')
+    @Get('getCompanyByOrg/:orgUniqId')
     @ApiOperation({ summary: 'Get companies based on organization' })
     @ApiHeader({ name: 'token', description: 'authorization', required: true })
     @ApiParam({ name: 'orgUniqId', required: true })

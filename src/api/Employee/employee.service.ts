@@ -42,7 +42,7 @@ export class EmployeeService {
                 jwtPayload.isFirstTimeLogin = true;
             }
             const jwt = await this.utilService.generateJSONToken(jwtPayload);
-            return { jwt, roles: jwtPayload.roles, permissions: jwtPayload.permissions, isFirstTimeLogin: jwtPayload.isFirstTimeLogin, companyLogoURL: companyLogoURL.companyLogoURL };
+            return { jwt, roles: jwtPayload.roles, permissions: jwtPayload.permissions, isFirstTimeLogin: jwtPayload.isFirstTimeLogin, companyLogoURL: companyLogoURL?.companyLogoURL };
 
         } catch (error) {
             throw error;

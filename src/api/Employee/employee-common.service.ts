@@ -104,4 +104,52 @@ export class EmployeeCommonService {
             throw error;
         }
     }
+
+    /**
+     * 
+     * @param pageNumber 
+     * @param pageLimit 
+     */
+    async getEmployeesList(pageNumber, pageLimit) {
+        try {
+            const limit = parseInt(pageLimit, 10) || 10; // limit to number
+            const page = parseInt(pageNumber) || 1; // pageNumber
+            const skip = (page - 1) * limit;// parse the skip to number
+            const empResponse = await this.employeeModel.find({ userName: 'SUPER_ADMIN' }, { isActive: true })
+                .skip(skip)                 // use 'skip' first
+                .limit(limit)
+            if (empResponse.length === 0) {
+                throw new HttpException('No companies available', HttpStatus.NOT_FOUND);
+            }
+            return {
+                pageNo: pageNumber,
+                pageLimit: limit,
+                totalCompanies: empResponse.length,
+                companies: empResponse
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * 
+     * @param empUniqueId 
+     */
+    async getEmployeeByEMPId(empUniqueId) {
+        try {
+            const employee = await this.employeeModel.find({ $and: [{ empUniqueId: empUniqueId }, { isActive: true }] });
+            if (!employee) {
+                return 'Employee not existed';
+            }
+            return {
+                pageNo: 1,
+                pageLimit: 10,
+                totalCompanies: employee.length,
+                companies: employee
+            };
+        } catch (error) {
+            throw error;
+        }
+    }
 }

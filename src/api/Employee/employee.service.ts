@@ -42,7 +42,7 @@ export class EmployeeService {
                 jwtPayload.isFirstTimeLogin = true;
             }
             const jwt = await this.utilService.generateJSONToken(jwtPayload);
-            return { jwt, roles: jwtPayload.roles, permissions: jwtPayload.permissions, isFirstTimeLogin: jwtPayload.isFirstTimeLogin, companyLogoURL: companyLogoURL?.companyLogoURL };
+            return { jwt, roles: jwtPayload.roles, permissions: jwtPayload.permissions, isFirstTimeLogin: jwtPayload.isFirstTimeLogin, companyLogoURL: companyLogoURL ? companyLogoURL : null };
 
         } catch (error) {
             throw error;
@@ -119,6 +119,31 @@ export class EmployeeService {
             // update permissions and roles
             return await this.commonService.updateEmpPermissions(permission, roles, empId);
 
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * 
+     * @param pageNumber 
+     * @param pageLimit 
+     */
+    async getCompaniesList(pageNumber, pageLimit) {
+        try {
+            return await this.commonService.getEmployeesList(pageNumber, pageLimit);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * 
+     * @param empUniqueId 
+     */
+    async getEmployeeByEMPId(empUniqueId) {
+        try {
+            return await this.commonService.getEmployeeByEMPId(empUniqueId);
         } catch (error) {
             throw error;
         }

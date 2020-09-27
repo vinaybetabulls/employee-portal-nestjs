@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Headers, HttpException, HttpStatus, Param, Post, Put } from "@nestjs/common";
-import { ApiBody, ApiHeader, ApiParam, ApiProperty, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiHeader, ApiOperation, ApiParam, ApiProperty, ApiTags } from "@nestjs/swagger";
 import * as _ from "lodash";
 import * as Admin from '../../config/employee.default';
 import { UtilService } from "../Utils/utils.service";
@@ -96,6 +96,27 @@ export class EmployeeController {
             console.log(request.permissions);
             console.log(request.roles)
             return await this.employeeService.updateEmpPermissions(request.permissions, request.roles, empId);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    @Get('list')
+    @ApiOperation({ summary: 'Get All Employees' })
+    @ApiHeader({ name: 'token', description: 'authorization', required: true })
+    @ApiParam({ name: 'pageNumber', required: false })
+    @ApiParam({ name: 'pageLimit', required: false })
+    async getEmployeesList(@Headers('token') authorization, @Param('pageNumber') pageNumber: string, @Param('pageLimit') pageLimit: string) {
+        try {
+            const token = await this.utilService.validateJSONToken(authorization);
+            if (token.user.username === Admin.superAdminRole || _.includes(token.user.permissions, UserPermission.ADDITIONAL)) {
+                // get all list of organization
+                return this.employeeService.getCompaniesList(pageNumber, pageLimit);
+            }
+            else {
+                const empId = token.user.empUniqueId;
+                return await this.employeeService.getEmployeeByEMPId(empId);
+            }
         } catch (error) {
             throw error;
         }

@@ -39,7 +39,7 @@ export class CompanyCommonService {
         const limit = parseInt(pageLimit, 10) || 10; // limit to number
         const page = parseInt(pageNumber) || 1; // pageNumber
         const skip = (page - 1) * limit;// parse the skip to number
-        const companyResponse = await this.companyModel.find({ isActive: true }).find({})
+        const companyResponse = await this.companyModel.find({ isActive: true })
             .skip(skip)                 // use 'skip' first
             .limit(limit)
         if (companyResponse.length === 0) {
@@ -101,6 +101,7 @@ export class CompanyCommonService {
      * @param orgUniqgId 
      */
     async getCompaniesByOrgId(orgUniqgId: string) {
-        return await this.companyModel.findOne({ companyOrganizationId: orgUniqgId }, { companyUniqeId: 1, companyName: 1, _id: 0 });
+        console.log("orgUniqgId...", orgUniqgId)
+        return await this.companyModel.find({ companyOrganizationId: orgUniqgId }, { companyUniqeId: 1, companyName: 1 });
     }
 }

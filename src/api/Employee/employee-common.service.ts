@@ -124,8 +124,8 @@ export class EmployeeCommonService {
             return {
                 pageNo: pageNumber,
                 pageLimit: limit,
-                totalCompanies: empResponse.length,
-                companies: empResponse
+                totalEmployees: empResponse.length,
+                employees: empResponse
             }
         } catch (error) {
             throw error;
@@ -145,8 +145,8 @@ export class EmployeeCommonService {
             return {
                 pageNo: 1,
                 pageLimit: 10,
-                totalCompanies: employee.length,
-                companies: employee
+                totalEmployees: employee.length,
+                employees: employee
             };
         } catch (error) {
             throw error;

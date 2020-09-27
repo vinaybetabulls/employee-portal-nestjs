@@ -23,7 +23,7 @@ export class OrganizationService {
             if (isOrgExists) {
                 throw new HttpException('Organization already exists', HttpStatus.CONFLICT);
             }
-            request.organizationLogoURL = `${orgUniqueId}.jpg`;
+            //request.organizationLogoURL = `${orgUniqueId}.jpg`;
             return await this.commonService.createOrganization(request, orgUniqueId, user);
         } catch (error) {
             throw error;

@@ -101,7 +101,7 @@ export class EmployeeController {
         }
     }
 
-    @Get('list')
+    @Get('employees/list')
     @ApiOperation({ summary: 'Get All Employees' })
     @ApiHeader({ name: 'token', description: 'authorization', required: true })
     @ApiParam({ name: 'pageNumber', required: false })

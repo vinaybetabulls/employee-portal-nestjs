@@ -115,7 +115,7 @@ export class EmployeeCommonService {
             const limit = parseInt(pageLimit, 10) || 10; // limit to number
             const page = parseInt(pageNumber) || 1; // pageNumber
             const skip = (page - 1) * limit;// parse the skip to number
-            const empResponse = await this.employeeModel.find({ userName: 'SUPER_ADMIN' }, { isActive: true })
+            const empResponse = await this.employeeModel.find({ $and: [{ userName: { $ne: 'superadmin' } }, { isActive: true }] })
                 .skip(skip)                 // use 'skip' first
                 .limit(limit)
             if (empResponse.length === 0) {

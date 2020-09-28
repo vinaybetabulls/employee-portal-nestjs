@@ -136,7 +136,7 @@ export class EmployeeCommonService {
      * 
      * @param empUniqueId 
      */
-    async getEmployeeByEMPId(empUniqueId) {
+    async getEmployeeByEMPId(empUniqueId: string) {
         try {
             const employee = await this.employeeModel.find({ $and: [{ empUniqueId: empUniqueId }, { isActive: true }] });
             if (!employee) {
@@ -148,6 +148,19 @@ export class EmployeeCommonService {
                 totalEmployees: employee.length,
                 employees: employee
             };
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * 
+     * @param searchEmp 
+     */
+    async searchEmployee(searchEmp: string) {
+        try {
+            const regEx = new RegExp(searchEmp, 'i')
+            return await this.employeeModel.find({ $and: [{ $or: [{ empId: regEx }, { userName: regEx }, { email: regEx }] }, { isActive: true }, { userName: { $ne: 'superadmin' } }] })
         } catch (error) {
             throw error;
         }

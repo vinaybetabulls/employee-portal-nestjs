@@ -121,4 +121,18 @@ export class EmployeeController {
             throw error;
         }
     }
+
+    @Get('employee/search/:searchEmp')
+    @ApiOperation({ summary: 'Search employee using empId, empEmail and empUsername' })
+    @ApiHeader({ name: 'token', description: 'authorization', required: true })
+    @ApiParam({ name: 'searchEmp' })
+    async searchemployee(@Headers('token') authorization, @Param('searchEmp') searchEmp: string) {
+        try {
+            await this.utilService.validateJSONToken(authorization);
+            return this.employeeService.searchEmployee(searchEmp);
+        } catch (error) {
+            throw error;
+
+        }
+    }
 }

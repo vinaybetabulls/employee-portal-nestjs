@@ -129,7 +129,7 @@ export class EmployeeService {
      * @param pageNumber 
      * @param pageLimit 
      */
-    async getCompaniesList(pageNumber, pageLimit) {
+    async getCompaniesList(pageNumber: string, pageLimit: string) {
         try {
             return await this.commonService.getEmployeesList(pageNumber, pageLimit);
         } catch (error) {
@@ -141,9 +141,21 @@ export class EmployeeService {
      * 
      * @param empUniqueId 
      */
-    async getEmployeeByEMPId(empUniqueId) {
+    async getEmployeeByEMPId(empUniqueId: string) {
         try {
             return await this.commonService.getEmployeeByEMPId(empUniqueId);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * 
+     * @param searchEmp 
+     */
+    async searchEmployee(searchEmp: string) {
+        try {
+            return this.commonService.searchEmployee(searchEmp);
         } catch (error) {
             throw error;
         }

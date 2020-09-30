@@ -75,7 +75,6 @@ export class CompanyCommonService {
      * @param companyId 
      */
     async deleteCompanyById(companyId: string) {
-        console.log('companyId..', companyId)
         const updated = await this.companyModel.updateOne({ companyUniqeId: companyId }, { $set: { isActive: false } });
         if (updated.ok) {
             return 'Company deleted successfully'
@@ -88,8 +87,7 @@ export class CompanyCommonService {
      * @param empId 
      */
     async getCompanyIdOfEmp(empId: string) {
-        const { company: { id } } = await this.empModel.findOne({ empUniqueId: empId }, { company: 1, _id: 0 })
-        console.log('company..', id)
+        const { company: { id } } = await this.empModel.findOne({ empUniqueId: empId }, { company: 1, _id: 0 });
         if (!id) {
             throw new HttpException('No companies found for employee', HttpStatus.NOT_FOUND);
         }

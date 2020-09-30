@@ -22,7 +22,6 @@ export interface EmployeeInterface extends Document {
     readonly email: string;
     password: string;
     readonly phone: string;
-    roles: UserPermission;
     readonly permissons: string;
 }
 

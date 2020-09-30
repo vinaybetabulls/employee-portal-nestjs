@@ -1,6 +1,6 @@
 
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsEnum, IsNotEmptyObject, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsNotEmptyObject, IsNumber, IsString } from 'class-validator';
 
 export class EmployeeLoginDto {
     @IsString()
@@ -109,14 +109,6 @@ export class EmployeeCreateDto {
     @ApiProperty({ name: 'phone', description: 'Employee phone number' })
     @IsString()
     phone!: string;
-
-    // @ApiProperty({ name: 'role', description: 'Employee role', type: Array })
-    // @IsArray()
-    // roles!: string;
-
-    // @ApiProperty({ name: 'permissions', description: 'Employee permissions', enum: Object.keys(PermissionsEnum) })
-    // @IsArray()
-    // permissions!: PermissionsEnum;
 
     @ApiProperty({ name: 'isActive', description: 'Employee active status' })
     @IsBoolean()

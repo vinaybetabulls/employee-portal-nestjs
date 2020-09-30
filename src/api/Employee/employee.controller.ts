@@ -93,8 +93,6 @@ export class EmployeeController {
             //     empUniqueId: token.user.empUniqueId
 
             // }
-            console.log(request.permissions);
-            console.log(request.roles)
             return await this.employeeService.updateEmpPermissions(request.permissions, request.roles, empId);
         } catch (error) {
             throw error;

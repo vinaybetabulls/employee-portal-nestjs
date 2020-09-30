@@ -25,12 +25,13 @@ export class EmployeeService {
             if (!decryptPassword) {
                 throw new HttpException('Wrong password', HttpStatus.BAD_REQUEST)
             }
-
+            // get permission and roles
+            const { permissions, roles } = await this.commonService.getEmployeePermissions(checkuserExists.empUniqueId);
             // create jwt token
             const jwtPayload = {
                 username: checkuserExists.userName,
-                roles: checkuserExists.roles,
-                permissions: checkuserExists.permissions,
+                roles,
+                permissions,
                 empUniqueId: checkuserExists.empUniqueId,
                 isFirstTimeLogin: false
             }
@@ -56,17 +57,22 @@ export class EmployeeService {
             if (emp) {
                 throw new HttpException('Employee already existed', HttpStatus.CONFLICT)
             }
-            const empUniqueId = uuid();
+            const empUniqueId = uuid(); // create employee unique Id
             request.email = ((request.email).toLocaleLowerCase()).trim();
             request.userName = ((request.userName).toLocaleLowerCase()).trim();
             if (request.dateOfJoining && request.dateOfJoining !== '') {
-                request.dateOfJoining = new Date(request.dateOfJoining).toISOString();
+                request.dateOfJoining = new Date(request.dateOfJoining).toISOString(); // convert dobj to ISO format
             }
             if (request.dob && request.dob !== '') {
-                request.dob = new Date(request.dob).toISOString();
+                request.dob = new Date(request.dob).toISOString(); // convert dob to ISO format
             }
+            // password encryption
             const decryptPassword = await this.utilService.passwordEncrypt(Employee.employeePassword);
-            return this.commonService.createEmployee(request, createdBy, empUniqueId, decryptPassword);
+            // create employee
+            const empResponse = await this.commonService.createEmployee(request, createdBy, empUniqueId, decryptPassword);
+            // create permissions
+            const permissions = await this.commonService.crateEmpPermissions(empResponse.empId, empResponse.empUniqueId);
+            return { employee: permissions }
         } catch (error) {
             throw error;
         }

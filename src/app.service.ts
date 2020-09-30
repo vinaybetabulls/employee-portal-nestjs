@@ -4,6 +4,7 @@ import { EmployeeInterface, UserPermission } from './api/Employee/interfaces/emp
 import { UtilService } from './api/Utils/utils.service';
 import * as Admin from './config/employee.default';
 import { v4 as uuid } from 'uuid';
+import { EmployeePermission } from './api/Employee/interfaces/employee-permissions.interface';
 
 @Injectable()
 export class AppService {
@@ -11,6 +12,8 @@ export class AppService {
   constructor(
     @Inject('EMPLOYEE_MODEL')
     private employeeModel: Model<EmployeeInterface>,
+    @Inject('EMPLOYEE_PERMISSIONS_MODEL')
+    private empPermissionsModel: Model<EmployeePermission>,
     private utilService: UtilService
   ) { }
 
@@ -24,7 +27,7 @@ export class AppService {
   async checkSuperAdminExists(): Promise<any> {
     try {
       const admin = await this.employeeModel.findOne({ userName: (Admin.superAdminUsername).toLocaleLowerCase() });
-      if(!admin) {
+      if (!admin) {
         return false;
       }
       return admin;
@@ -45,13 +48,14 @@ export class AppService {
         empUniqueId: uuid(),
         empId: 'SUPERADMIN',
         userName: Admin.superAdminUsername,
-        password: decryptPassword,
-        roles: [Admin.superAdminRole],
-        permissions: [UserPermission.ADDITIONAL, UserPermission.CREATE, UserPermission.DELETE, UserPermission.EDIT, UserPermission.VIEW]
+        password: decryptPassword
       }
       // save super admin into employees collection
       const superAdmin = new this.employeeModel(superAdminRequest);
-      return await superAdmin.save();
+      const superAdminResponse = await superAdmin.save();
+      const createPermissions = new this.empPermissionsModel({ empId: superAdminResponse.empId, empUniqueId: superAdminResponse.empUniqueId, permissions: [UserPermission.ADDITIONAL, UserPermission.CREATE, UserPermission.DELETE, UserPermission.EDIT, UserPermission.VIEW], roles: [Admin.superAdminRole] })
+      const permissions = await createPermissions.save();
+      return { superAdminResponse, permissions }
     } catch (error) {
       throw error;;
     }

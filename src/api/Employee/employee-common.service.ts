@@ -1,7 +1,9 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { Model } from 'mongoose';
 import { CompanyInterface } from "../Company/interfaces/company.interface";
+import { EmployeePermission } from "./interfaces/employee-permissions.interface";
 import { EmployeeInterface } from "./interfaces/employee.interface";
+import * as Employee from '../../config/employee.default';
 
 
 
@@ -11,7 +13,9 @@ export class EmployeeCommonService {
         @Inject('EMPLOYEE_MODEL')
         private employeeModel: Model<EmployeeInterface>,
         @Inject('COMPANY_MODEL')
-        private companyModel: Model<CompanyInterface>
+        private companyModel: Model<CompanyInterface>,
+        @Inject('EMPLOYEE_PERMISSIONS_MODEL')
+        private empPermissionsModel: Model<EmployeePermission>
     ) { }
 
     /**
@@ -82,10 +86,8 @@ export class EmployeeCommonService {
      */
     async updateEmpPermissions(permissions: string[], roles: string[], empId: string) {
         try {
-            console.log('permissions..', permissions);
-            console.log('roles..', roles);
-            await this.employeeModel.updateOne({ empUniqueId: empId }, { "$addToSet": { "permissions": { "$each": permissions } } })
-            return await this.employeeModel.updateOne({ empUniqueId: empId }, { "$addToSet": { "roles": { "$each": roles } } })
+            await this.empPermissionsModel.updateOne({ empUniqueId: empId }, { "$addToSet": { "permissions": { "$each": permissions } } })
+            return await this.empPermissionsModel.updateOne({ empUniqueId: empId }, { "$addToSet": { "roles": { "$each": roles } } })
 
         } catch (error) {
             console.log('update emp permissions..', error);
@@ -161,6 +163,36 @@ export class EmployeeCommonService {
         try {
             const regEx = new RegExp(searchEmp, 'i')
             return await this.employeeModel.find({ $and: [{ $or: [{ empId: regEx }, { userName: regEx }, { email: regEx }] }, { isActive: true }, { userName: { $ne: 'superadmin' } }] })
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * 
+     * @param empId string
+     * @param empUniqueId string
+     * @param permissions string
+     * @param roles string
+     */
+    async crateEmpPermissions(empId: string, empUniqueId: string) {
+        try {
+            const permissions = [Employee.employeeDefaultAction];
+            const roles = [Employee.employeeRole];
+            const empRolesAndPermissions = this.empPermissionsModel({ empId, empUniqueId, permissions, roles });
+            return await empRolesAndPermissions.save();
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * 
+     * @param empUniqueId string
+     */
+    async getEmployeePermissions(empUniqueId: string) {
+        try {
+            return await this.empPermissionsModel.findOne({ empUniqueId }, { permissions: 1, roles: 1 })
         } catch (error) {
             throw error;
         }

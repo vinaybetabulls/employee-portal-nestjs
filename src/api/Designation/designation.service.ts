@@ -2,6 +2,7 @@ import { DesignationInterface } from './interfaces/designation.interface';
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { v4 as uuid } from 'uuid';
 import { Model } from 'mongoose';
+import { DesignationDTO } from './dto/designation.dto';
 
 
 @Injectable()
@@ -36,4 +37,63 @@ export class DesignationService {
       throw error;;
     }
   }
+
+  /**
+     * 
+     * @param request 
+     * @param file 
+     */
+  async createDesignation(request: DesignationDTO, user: any): Promise<any> {
+    try {
+      const desgUniqueId = uuid();
+      // check designation already exists
+      let desgName = request.name;
+      const isDesgExists = await this.designationModel.findOne({ name: desgName })
+      if (isDesgExists) {
+        throw new HttpException('Designation already exists', HttpStatus.CONFLICT);
+      }
+      request['desgUniqueId'] = desgUniqueId;
+      request['createdBy'] = user;
+      console.log(request);
+      const desg = new this.designationModel(request);
+      return await desg.save();
+      //return await this.commonService.createOrganization(request, orgUniqueId, user);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+     * 
+     * @param desgUniqueId 
+     */
+  async getDesignationByDesgId(desgUniqueId: string): Promise<any> {
+    try {
+      const designation = await this.designationModel.findOne({ $and: [{ desgUniqueId: desgUniqueId }] });
+      if (!designation) {
+        throw new HttpException('Designation not existed', HttpStatus.NOT_FOUND);
+      }
+      return {
+        pageNo: 1,
+        pageLimit: 10,
+        totalCompanies: 1,
+        organizations: [designation]
+      }
+    } catch (error) {
+      throw error;;
+    }
+  }
+
+  /**
+     * 
+     * @param desgUniqueId 
+     */
+  async updateDesignationById(desgUniqueId: string): Promise<any> {
+    try {
+      return desgUniqueId;
+    } catch (error) {
+      throw error;;
+    }
+  }
+
 }

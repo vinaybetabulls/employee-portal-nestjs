@@ -4,6 +4,6 @@ export interface DesignationInterface extends Document {
   desgUniqueId: string;
   readonly name: string;
   readonly level: number;
-  readonly rolesAndResponsibilites: string;
+  readonly rolesAndResponsibilities: string;
   readonly notesURL: string;
 }

@@ -22,11 +22,61 @@ export class DesignationController {
     try {
       const token = await this.utilService.validateJSONToken(authorization);
       if (token.user.username === Admin.superAdminRole || _.includes(token.user.permissions, UserPermission.ADDITIONAL)) {
-          // get all list of organization
-          return this.designationService.listOfDesignations(pageNumber, pageLimit);
+        // get all list of organization
+        return this.designationService.listOfDesignations(pageNumber, pageLimit);
       }
-  } catch (error) {
+    } catch (error) {
       throw error;
+    }
   }
+
+  @Post('/create')
+  @ApiOperation({ summary: 'Create Designations' })
+  @ApiHeader({ name: 'token', description: 'authorization', required: true })
+  @ApiBody({ type: DesignationDTO })
+  async createDesignation(@Headers('token') authorization, @Body() request: DesignationDTO) {
+    try {
+      const token = await this.utilService.validateJSONToken(authorization);
+      if (token.user.username !== Admin.superAdminRole && !_.includes(token.user.permissions, UserPermission.CREATE, UserPermission.ADDITIONAL)) {
+        throw new HttpException('Authorization', HttpStatus.FORBIDDEN)
+      }
+      const user = {
+        empUserName: token.user.username,
+        empUniqueId: token.user.empUniqueId
+      }
+      return await this.designationService.createDesignation(request, user);
+    } catch (error) {
+      throw error;
+    }
   }
+
+  @Get('/:desgUniqueId')
+  @ApiOperation({ summary: 'Get individual Designation' })
+  @ApiHeader({ name: 'token', description: 'authorization', required: true })
+  @ApiParam({ name: 'desgUniqueId', required: true })
+  async getDesignationById(@Headers('token') authorization, @Param('desgUniqueId') desgId) {
+    try {
+      await this.utilService.validateJSONToken(authorization);
+      return await this.designationService.getDesignationByDesgId(desgId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Put('/:desgUniqueId')
+  @ApiOperation({ summary: 'Update Designation details' })
+  @ApiHeader({ name: 'token', description: 'authorization', required: true })
+  @ApiParam({ name: 'desgUniqueId' })
+  async updateDesignationById(@Headers('token') authorization, @Param('desgUniqueId') desgId) {
+    try {
+      const token = await this.utilService.validateJSONToken(authorization);
+      if (token.user.username !== Admin.superAdminRole && !_.includes(token.user.permissions, UserPermission.EDIT, UserPermission.ADDITIONAL)) {
+        throw new HttpException('Authorization', HttpStatus.FORBIDDEN)
+      }
+      return await this.designationService.updateDesignationById(desgId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
 }

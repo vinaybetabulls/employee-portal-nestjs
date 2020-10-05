@@ -9,8 +9,8 @@ export class DesignationDTO {
     @ApiProperty({ name: 'level', description: 'Hirerachy' })
     level!: string;
     @IsString()
-    @ApiProperty({ name: 'roleAndResponsibilities', description: 'Roles & Responsibilites' })
-    roleAndResponsibilities!: string;
+    @ApiProperty({ name: 'rolesAndResponsibilities', description: 'Roles & Responsibilites' })
+    rolesAndResponsibilities!: string;
     @IsString()
     @ApiProperty({ name: 'notesURL', description: 'Roles Description' })
     notesURL!: string;

@@ -54,7 +54,6 @@ export class DesignationService {
       }
       request['desgUniqueId'] = desgUniqueId;
       request['createdBy'] = user;
-      console.log(request);
       const desg = new this.designationModel(request);
       return await desg.save();
       //return await this.commonService.createOrganization(request, orgUniqueId, user);

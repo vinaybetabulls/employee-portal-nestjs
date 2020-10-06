@@ -1,12 +1,15 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as bodyParser from 'body-parser';
 import 'dotenv/config';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   try {
     const app = await NestFactory.create(AppModule);
+    app.use(bodyParser.json({ limit: '50mb' }));
+    app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
     app.enableCors(); // protection
     const options = new DocumentBuilder()
       .setTitle('Employee Portal')

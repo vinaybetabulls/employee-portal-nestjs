@@ -21,17 +21,17 @@ export class DesignationService {
       const limit = parseInt(pageLimit, 10) || 10; // limit to number
       const page = parseInt(pageNumber) || 1; // pageNumber
       const skip = (page - 1) * limit;// parse the skip to number
-      const orgResponse = await this.designationModel.find()
+      const designationsResponse = await this.designationModel.find()
         .skip(skip)                 // use 'skip' first
         .limit(limit)
-      if (orgResponse.length === 0) {
-        throw new HttpException('No organizations found', HttpStatus.NOT_FOUND);
+      if (designationsResponse.length === 0) {
+        throw new HttpException('No designations found', HttpStatus.NOT_FOUND);
       }
       return {
         pageNo: pageNumber,
         pageLimit: limit,
-        totalCompanies: orgResponse.length,
-        organizations: orgResponse
+        totalCompanies: designationsResponse.length,
+        designations: designationsResponse
       }
     } catch (error) {
       throw error;;
@@ -47,7 +47,7 @@ export class DesignationService {
     try {
       const desgUniqueId = uuid();
       // check designation already exists
-      let desgName = request.name;
+      const desgName = request.name;
       const isDesgExists = await this.designationModel.findOne({ name: desgName })
       if (isDesgExists) {
         throw new HttpException('Designation already exists', HttpStatus.CONFLICT);

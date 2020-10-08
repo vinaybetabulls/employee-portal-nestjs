@@ -1,5 +1,5 @@
 
-import { IsArray, IsNotEmptyObject, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 export class DesignationDTO {
     @IsString()

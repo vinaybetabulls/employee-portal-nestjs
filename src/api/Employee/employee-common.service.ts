@@ -117,9 +117,31 @@ export class EmployeeCommonService {
             const limit = parseInt(pageLimit, 10) || 10; // limit to number
             const page = parseInt(pageNumber) || 1; // pageNumber
             const skip = (page - 1) * limit;// parse the skip to number
-            const empResponse = await this.employeeModel.find({ $and: [{ userName: { $ne: 'superadmin' } }, { isActive: true }] })
-                .skip(skip)                 // use 'skip' first
-                .limit(limit)
+            const empResponse = await this.employeeModel.aggregate([
+                {
+                    $match: { $and: [{ userName: { $ne: 'superadmin' } }, { isActive: true }] }
+                },
+                {
+                    $lookup:
+                    {
+                        from: "employeepermissions",
+                        localField: "empUniqueId",
+                        foreignField: "empUniqueId",
+                        as: "employeePermissions"
+                    }
+
+                },
+                {
+                    $skip: skip
+                },
+                {
+                    $limit: limit
+                }
+            ])
+            console.log('aggregate...', empResponse)
+            // const empResponse = await this.employeeModel.find({ $and: [{ userName: { $ne: 'superadmin' } }, { isActive: true }] })
+            //     .skip(skip)                 // use 'skip' first
+            //     .limit(limit)
             if (empResponse.length === 0) {
                 throw new HttpException('No companies available', HttpStatus.NOT_FOUND);
             }
@@ -140,7 +162,22 @@ export class EmployeeCommonService {
      */
     async getEmployeeByEMPId(empUniqueId: string) {
         try {
-            const employee = await this.employeeModel.find({ $and: [{ empUniqueId: empUniqueId }, { isActive: true }] });
+            const employee = await this.employeeModel.aggregate([
+                {
+                    $match: { $and: [{ empUniqueId: empUniqueId }, { isActive: true }] }
+                },
+                {
+                    $lookup:
+                    {
+                        from: "employeepermissions",
+                        localField: "empUniqueId",
+                        foreignField: "empUniqueId",
+                        as: "employeePermissions"
+                    }
+
+                }
+            ]);
+
             if (!employee) {
                 return 'Employee not existed';
             }

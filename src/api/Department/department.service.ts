@@ -47,6 +47,15 @@ export class DepartmentService {
         }
     }
 
+    async deleteDepartmentById(deptUniqId: string): Promise<any> {
+        try {
+            await this.commonservice.getDepartmentById(deptUniqId);
+            return this.commonservice.deleteDepartmentById(deptUniqId);
+        } catch (error) {
+            throw error;
+        }
+    }
+
     /**
      * 
      * @param deptUniqId 

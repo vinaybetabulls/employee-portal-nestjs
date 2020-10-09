@@ -1,4 +1,4 @@
-import { Controller, Post, Headers, Body, HttpStatus, HttpException, Get, Param } from "@nestjs/common";
+import { Controller, Post, Headers, Body, HttpStatus, HttpException, Get, Param, Delete } from "@nestjs/common";
 import { ApiBody, ApiHeader, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { UtilService } from "../Utils/utils.service";
 import { DepartmentRequstDto } from "./dto/department-request.dto";
@@ -13,7 +13,7 @@ export class DepartmentController {
 
     constructor(private utilService: UtilService, private departmentService: DepartmentService) { }
 
-    @Post('/create')
+    @Post('department/create')
     @ApiOperation({ summary: 'Create Department' })
     @ApiHeader({ name: 'token', description: 'authentication', required: true })
     @ApiBody({ type: DepartmentRequstDto })
@@ -33,7 +33,7 @@ export class DepartmentController {
         }
     }
 
-    @Get('/list')
+    @Get('department/list')
     @ApiOperation({ summary: 'Get Departments List' })
     @ApiHeader({ name: 'token', description: 'authorization', required: true })
     @ApiParam({ name: 'pageNumber', required: false })
@@ -78,6 +78,19 @@ export class DepartmentController {
             console.log('empUniqId..', empUniqId)
             await this.utilService.validateJSONToken(authorization);
             return await this.departmentService.getDepartmentByEmpId(empUniqId);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    @Delete('/deleteDepartmentById/:departmentUniqId')
+    @ApiOperation({ summary: 'Delete Department by Department Id' })
+    @ApiHeader({ name: 'token', description: 'authorization', required: true })
+    @ApiParam({ name: 'departmentUniqId', description: 'Employee Unique Id', type: String })
+    async deleteDepartmentById(@Headers('token') authorization, @Param('departmentUniqId') deptUniqId) {
+        try {
+            await this.utilService.validateJSONToken(authorization);
+            return await this.departmentService.deleteDepartmentById(deptUniqId);
         } catch (error) {
             throw error;
         }

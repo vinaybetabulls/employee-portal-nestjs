@@ -76,6 +76,16 @@ export class DepartmentCommonservice {
      * @param deptUniqId 
      */
     async getDepartmentById(deptUniqId: string): Promise<any> {
-        return await this.departmentModel.findOne({ departmentUniqueId: deptUniqId });
+        const dept = await this.departmentModel.findOne({ $and: [{ isActive: true }, { departmentUniqueId: deptUniqId }] });
+        if (dept) {
+            return { department: dept }
+        }
+        else {
+            throw new HttpException('Department not fodun', HttpStatus.NOT_FOUND);
+        }
+    }
+
+    async deleteDepartmentById(deptUniqId: string): Promise<any> {
+        return await this.departmentModel.updateOne({ departmentUniqueId: deptUniqId }, { $set: { isActive: false } });
     }
 }

@@ -4,6 +4,7 @@ import { CompanyInterface } from "../Company/interfaces/company.interface";
 import { EmployeePermission } from "./interfaces/employee-permissions.interface";
 import { EmployeeInterface } from "./interfaces/employee.interface";
 import * as Employee from '../../config/employee.default';
+import { DepartmentInterface } from "../Department/interfaces/department.interface";
 
 
 
@@ -15,7 +16,9 @@ export class EmployeeCommonService {
         @Inject('COMPANY_MODEL')
         private companyModel: Model<CompanyInterface>,
         @Inject('EMPLOYEE_PERMISSIONS_MODEL')
-        private empPermissionsModel: Model<EmployeePermission>
+        private empPermissionsModel: Model<EmployeePermission>,
+        @Inject('DEPARTMENT_MODEL')
+        private departmentModel: Model<DepartmentInterface>
     ) { }
 
     /**

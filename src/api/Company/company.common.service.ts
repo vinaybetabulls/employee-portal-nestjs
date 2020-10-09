@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { Model } from 'mongoose';
+import { DepartmentInterface } from "../Department/interfaces/department.interface";
 import { EmployeeInterface } from "../Employee/interfaces/employee.interface";
 import { CompanyRequestDto } from "./dto/company.request.dto";
 import { CompanyInterface } from "./interfaces/company.interface";
@@ -7,7 +8,7 @@ import { CompanyInterface } from "./interfaces/company.interface";
 
 @Injectable()
 export class CompanyCommonService {
-    constructor(@Inject('COMPANY_MODEL') private companyModel: Model<CompanyInterface>, @Inject('EMPLOYEE_MODEL') private empModel: Model<EmployeeInterface>) { }
+    constructor(@Inject('COMPANY_MODEL') private companyModel: Model<CompanyInterface>, @Inject('EMPLOYEE_MODEL') private empModel: Model<EmployeeInterface>, @Inject('DEPARTMENT_MODEL') private departmentModel: Model<DepartmentInterface>) { }
 
     /**
      * 
@@ -59,6 +60,7 @@ export class CompanyCommonService {
      */
     async getCompanyById(companyId: string) {
         const company = await this.companyModel.find({ $and: [{ companyUniqeId: companyId }, { isActive: true }] });
+        const departments = await this.departmentModel.find({ companiesList: { $in: [companyId] } })
         if (!company) {
             throw new HttpException('Company not existed', HttpStatus.NOT_FOUND);
         }
@@ -66,7 +68,8 @@ export class CompanyCommonService {
             pageNo: 1,
             pageLimit: 10,
             totalCompanies: company.length,
-            companies: company
+            companies: company,
+            department: departments
         };
     }
 

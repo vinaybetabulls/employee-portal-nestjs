@@ -49,9 +49,6 @@ export class CompanyController {
             else {
                 const empId = token.user.empUniqueId;
                 return await this.companyService.getCompanyByEmpId(empId);
-                // get organizations for particular employee
-                // TOD
-                // return this.organizationService.getOrganizationByEmpId(token.user.empUniqueId);
             }
         } catch (error) {
 

@@ -10,9 +10,10 @@ import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { databaseProviders } from './database/database.providers';
 import { DesignationModule } from './api/Designation/designation.module';
+import { DepartmentModule } from './api/Department/department.module';
 
 @Module({
-  imports: [DatabaseModule, OrganizationModule, EmployeeModule, UtilModule, CompanyModule, DesignationModule],
+  imports: [DatabaseModule, OrganizationModule, EmployeeModule, UtilModule, CompanyModule, DesignationModule, DepartmentModule],
   controllers: [AppController],
   providers: [AppService, UtilService,
     ...databaseProviders,

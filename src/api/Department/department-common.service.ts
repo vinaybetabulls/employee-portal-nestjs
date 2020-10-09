@@ -48,8 +48,8 @@ export class DepartmentCommonservice {
         return {
             pageNo: pageNumber,
             pageLimit: limit,
-            totalCompanies: departmentResponse.length,
-            companies: departmentResponse
+            totalDepartments: departmentResponse.length,
+            departments: departmentResponse
         }
     }
 

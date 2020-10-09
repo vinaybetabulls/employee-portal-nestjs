@@ -21,7 +21,7 @@ export class DesignationService {
       const limit = parseInt(pageLimit, 10) || 10; // limit to number
       const page = parseInt(pageNumber) || 1; // pageNumber
       const skip = (page - 1) * limit;// parse the skip to number
-      const designationsResponse = await this.designationModel.find()
+      const designationsResponse = await this.designationModel.find({ isActive: true })
         .skip(skip)                 // use 'skip' first
         .limit(limit)
       if (designationsResponse.length === 0) {
@@ -68,7 +68,7 @@ export class DesignationService {
      */
   async getDesignationByDesgId(desgUniqueId: string): Promise<any> {
     try {
-      const designation = await this.designationModel.findOne({ $and: [{ desgUniqueId: desgUniqueId }] });
+      const designation = await this.designationModel.findOne({ $and: [{ desgUniqueId: desgUniqueId }, { isActive: true }] });
       if (!designation) {
         throw new HttpException('Designation not existed', HttpStatus.NOT_FOUND);
       }
@@ -91,8 +91,28 @@ export class DesignationService {
     try {
       return desgUniqueId;
     } catch (error) {
-      throw error;;
+      throw error;
     }
+  }
+
+  /**
+   * 
+   * @param desigUniqId 
+   */
+  async deleteDesignationbyId(desigUniqId: string): Promise<any> {
+    try {
+      const designation = await this.designationModel.findOne({ desgUniqueId: desigUniqId });
+      if (!designation) {
+        throw new HttpException('Designation not existed', HttpStatus.NOT_FOUND);
+      }
+      const deleted = await this.designationModel.updateOne({ desgUniqueId: desigUniqId }, { $set: { isActive: false } });
+      if (deleted) {
+        return { message: 'Designation deleted', status: HttpStatus.OK }
+      }
+    } catch (error) {
+      throw error;
+    }
+
   }
 
 }

@@ -9,4 +9,5 @@ export const DesignationSchema = new mongoose.Schema({
   level: { type: String, required: true },
   rolesAndResponsibilities: { type: String, required: true },
   notesURL: { type: String, required: true },
+  isActive: { isActive: true }
 }, { timestamps: { createdAt: 'createdOn', updatedAt: 'updatedOn' } });

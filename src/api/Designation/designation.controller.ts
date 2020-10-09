@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Headers, HttpException, HttpStatus, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Headers, HttpException, HttpStatus, Param, Post, Put } from "@nestjs/common";
 import { ApiBody, ApiHeader, ApiOperation, ApiParam, ApiProperty, ApiTags } from "@nestjs/swagger";
 import { UtilService } from "../Utils/utils.service";
 import { DesignationService } from "./designation.service";
@@ -74,6 +74,22 @@ export class DesignationController {
         throw new HttpException('Authorization', HttpStatus.FORBIDDEN)
       }
       return await this.designationService.updateDesignationById(desgId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Delete('/:desgUniqueId')
+  @ApiOperation({ summary: 'Delete Designation' })
+  @ApiHeader({ name: 'token', description: 'authorization', required: true })
+  @ApiParam({ name: 'desgUniqueId' })
+  async deleteDesignationBtId(@Headers('token') authorization, @Param('desgUniqueId') desigUniqId) {
+    try {
+      const token = await this.utilService.validateJSONToken(authorization);
+      if (token.user.username !== Admin.superAdminRole && !_.includes(token.user.permissions, UserPermission.DELETE, UserPermission.ADDITIONAL)) {
+        throw new HttpException('Authorization', HttpStatus.FORBIDDEN)
+      }
+      return await this.designationService.deleteDesignationbyId(desigUniqId);
     } catch (error) {
       throw error;
     }

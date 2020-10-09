@@ -81,7 +81,7 @@ export class DepartmentCommonservice {
             return { department: dept }
         }
         else {
-            throw new HttpException('Department not fodun', HttpStatus.NOT_FOUND);
+            throw new HttpException('Department not found', HttpStatus.NOT_FOUND);
         }
     }
 

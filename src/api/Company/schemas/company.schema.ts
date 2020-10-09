@@ -24,7 +24,7 @@ export const CompanySchema = new mongoose.Schema({
   },
   companyLogoURL: { type: String, required: true },
   rulesAndRegulationsURL: { type: String },
-  isActive: { type: String, default: true },
+  isActive: { type: Boolean, default: true },
   createdBy: { type: Object }
 
 }, { timestamps: { createdAt: 'createdOn', updatedAt: 'updatedOn' } });

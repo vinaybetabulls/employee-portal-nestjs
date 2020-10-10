@@ -89,11 +89,10 @@ export class EmployeeCommonService {
      */
     async updateEmpPermissions(permissions: string[], roles: string[], empId: string) {
         try {
-            await this.empPermissionsModel.updateOne({ empUniqueId: empId }, { "$addToSet": { "permissions": { "$each": permissions } } })
-            return await this.empPermissionsModel.updateOne({ empUniqueId: empId }, { "$addToSet": { "roles": { "$each": roles } } })
+            await this.empPermissionsModel.updateOne({ empUniqueId: empId }, { $set: { permissions: permissions } })
+            return await this.empPermissionsModel.updateOne({ empUniqueId: empId }, { $set: { "roles": roles } })
 
         } catch (error) {
-            console.log('update emp permissions..', error);
             throw error;
         }
     }
@@ -141,7 +140,6 @@ export class EmployeeCommonService {
                     $limit: limit
                 }
             ])
-            console.log('aggregate...', empResponse)
             // const empResponse = await this.employeeModel.find({ $and: [{ userName: { $ne: 'superadmin' } }, { isActive: true }] })
             //     .skip(skip)                 // use 'skip' first
             //     .limit(limit)

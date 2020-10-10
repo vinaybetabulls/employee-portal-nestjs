@@ -85,7 +85,15 @@ export class DepartmentCommonservice {
         }
     }
 
+    /**
+     * 
+     * @param deptUniqId 
+     */
     async deleteDepartmentById(deptUniqId: string): Promise<any> {
         return await this.departmentModel.updateOne({ departmentUniqueId: deptUniqId }, { $set: { isActive: false } });
+    }
+
+    async getDepartmentByCompanyId(companyId: string): Promise<any> {
+        return await this.departmentModel.find({ companiesList: { $in: [companyId] } });
     }
 }

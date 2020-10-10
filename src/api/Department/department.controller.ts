@@ -95,4 +95,18 @@ export class DepartmentController {
             throw error;
         }
     }
+
+    @Get('department/getDepartmentByCompanyId/:companyUniqId')
+    @ApiOperation({ summary: 'Get Department by Company Id' })
+    @ApiHeader({ name: 'token', description: 'authorization', required: true })
+    @ApiParam({ name: 'companyUniqId', description: 'Employee Unique Id', type: String })
+    async getDepartmentsByCompanyId(@Headers('token') authorization, @Param('companyUniqId') companyUnqId) {
+        try {
+            await this.utilService.validateJSONToken(authorization);
+            return await this.departmentService.getDepartmentByCompanyId(companyUnqId);
+        } catch (error) {
+            throw error;
+        }
+    }
+
 }

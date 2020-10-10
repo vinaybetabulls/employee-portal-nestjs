@@ -62,7 +62,19 @@ export class DepartmentService {
      */
     async getDepartmentById(deptUniqId: string): Promise<any> {
         try {
-            return this.commonservice.getDepartmentById(deptUniqId);
+            return await this.commonservice.getDepartmentById(deptUniqId);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * 
+     * @param companyId 
+     */
+    async getDepartmentByCompanyId(companyId: string): Promise<any> {
+        try {
+            return await this.commonservice.getDepartmentByCompanyId(companyId);
         } catch (error) {
             throw error;
         }

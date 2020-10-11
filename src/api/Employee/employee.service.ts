@@ -161,7 +161,19 @@ export class EmployeeService {
      */
     async searchEmployee(searchEmp: string) {
         try {
-            return this.commonService.searchEmployee(searchEmp);
+            return await this.commonService.searchEmployee(searchEmp);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getEmployeePermissions(empUniqueId: string): Promise<any> {
+        try {
+            // check empId is valid or not
+            await this.commonService.getEmployeeById(empUniqueId);
+            // get emp permissions
+            return await this.commonService.getEmployeePermissions(empUniqueId);
+
         } catch (error) {
             throw error;
         }

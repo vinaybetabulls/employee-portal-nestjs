@@ -133,4 +133,17 @@ export class EmployeeController {
 
         }
     }
+
+    @Get('/employee/permissions/:empUniqeId')
+    @ApiOperation({ summary: 'Get employee permissions by using employee Id' })
+    @ApiHeader({ name: 'token', description: 'authorization', required: true })
+    @ApiParam({ name: 'empUniqeId', required: true, type: String })
+    async getEmployeePermissions(@Headers('token') authorization, @Param('empUniqeId') empUniqId: string) {
+        try {
+            await this.utilService.validateJSONToken(authorization);
+            return this.employeeService.getEmployeePermissions(empUniqId);
+        } catch (error) {
+            throw error;
+        }
+    }
 }

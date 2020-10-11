@@ -42,6 +42,7 @@ export class DepartmentCommonservice {
         const departmentResponse = await this.departmentModel.find({ isActive: true })
             .skip(skip)                 // use 'skip' first
             .limit(limit)
+            .sort({ _id: -1 })
         if (departmentResponse.length === 0) {
             throw new HttpException('No companies available', HttpStatus.NOT_FOUND);
         }

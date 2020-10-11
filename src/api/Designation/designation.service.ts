@@ -24,6 +24,7 @@ export class DesignationService {
       const designationsResponse = await this.designationModel.find({ isActive: true })
         .skip(skip)                 // use 'skip' first
         .limit(limit)
+        .sort({ _id: -1 })
       if (designationsResponse.length === 0) {
         throw new HttpException('No designations found', HttpStatus.NOT_FOUND);
       }

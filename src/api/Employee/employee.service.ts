@@ -23,7 +23,7 @@ export class EmployeeService {
             // decrypt password
             const decryptPassword = await this.utilService.decryptPassword(request.password, checkuserExists.password);
             if (!decryptPassword) {
-                throw new HttpException('Wrong password', HttpStatus.BAD_REQUEST)
+                throw new HttpException('Wrong password', HttpStatus.NOT_FOUND)
             }
             // get permission and roles
             const { permissions, roles } = await this.commonService.getEmployeePermissions(checkuserExists.empUniqueId);

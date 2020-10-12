@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Headers, HttpException, HttpStatus, Param, Post, Put } from "@nestjs/common";
 import { ApiBody, ApiHeader, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { request } from "express";
 import * as _ from "lodash";
 import * as Admin from '../../config/employee.default';
 import { UserPermission } from "../Employee/interfaces/employee.interface";
@@ -88,14 +89,16 @@ export class OrganizationController {
     @Put('/:orgUniqueId')
     @ApiOperation({ summary: 'Update organization details' })
     @ApiHeader({ name: 'token', description: 'authorization', required: true })
-    @ApiParam({ name: 'orgUniqueid' })
-    async updateOrganizationById(@Headers('token') authorization, @Param('orgUniqueId') orgId) {
+    @ApiParam({ name: 'orgUniqueId', type: String, required: true })
+    @ApiBody({ type: OrganizationRequestDto })
+    async updateOrganizationById(@Headers('token') authorization, @Param('orgUniqueId') orgId: string, @Body() request: OrganizationRequestDto) {
         try {
+            console.log('orgId..', orgId)
             const token = await this.utilService.validateJSONToken(authorization);
             if (token.user.username !== Admin.superAdminRole && !_.includes(token.user.permissions, UserPermission.EDIT, UserPermission.ADDITIONAL)) {
                 throw new HttpException('Authorization', HttpStatus.FORBIDDEN)
             }
-            return await this.organizationService.updateOrganizatonById(orgId);
+            return await this.organizationService.updateOrganizatonById(orgId, request);
         } catch (error) {
             throw error;
         }

@@ -88,12 +88,12 @@ export class OrganizationService {
      * 
      * @param orgId 
      */
-    async updateOrganizatonById(orgId: string): Promise<any> {
+    async updateOrganizatonById(orgId: string, request: OrganizationRequestDto): Promise<any> {
         try {
             // check organization exist or not
-            await this.commonService.getOrganizationByOrgId(orgId);
+            const org = await this.commonService.getOrganizationByOrgId(orgId);
             // udpate organization details byId
-            return await this.commonService.updateOrganizationbyOrgId(orgId);
+            return await this.commonService.updateOrganizationbyOrgId(orgId, request, org.organizations[0].toJSON());
         } catch (error) {
             throw error;;
         }

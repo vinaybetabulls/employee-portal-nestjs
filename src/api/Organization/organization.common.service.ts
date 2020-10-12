@@ -62,6 +62,7 @@ export class OrganizationCommonService {
      * @param orgId 
      */
     async getOrganizationByOrgId(orgId: string) {
+        console.log(orgId);
         const org = await this.organizationModel.findOne({ $and: [{ orgUniqueId: orgId }, { isActive: true }] });
         if (!org) {
             throw new HttpException('Organization not existed', HttpStatus.NOT_FOUND);
@@ -89,13 +90,30 @@ export class OrganizationCommonService {
 
     /**
      * 
-     * @param orgId 
+     * @param orgId string
+     * @param request any
+     * @param org OrgnizationReuqestDto
      */
-    async updateOrganizationbyOrgId(orgId: string) {
-        // Todo
-        return orgId;
+    async updateOrganizationbyOrgId(orgId: string, request: OrganizationRequestDto, org: any) {
+        const newData = { ...org, ...request };
+        delete newData._id;
+        delete newData.organizationName;
+        delete newData.organizationCode;
+        delete newData.__v;
+        newData.updatedOn = new Date().toISOString();
+        const update = await this.organizationModel.updateOne({ orgUniqueId: orgId }, { $set: newData })
+        if (update.ok) {
+            return 'Organization updated successfully'
+        }
+        else {
+            return 'Organization update failed'
+        }
     }
 
+    /**
+     * 
+     * @param empId string
+     */
     async getOrganizationIdByEmpId(empId: string) {
         const { organization: { id } } = await this.empModel.findOne({ empUniqueId: empId }, { organization: 1, _id: 0 });
         if (!id) {

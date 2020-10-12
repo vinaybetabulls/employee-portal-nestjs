@@ -102,7 +102,33 @@ export class CompanyCommonService {
      * @param orgUniqgId 
      */
     async getCompaniesByOrgId(orgUniqgId: string) {
-        console.log("orgUniqgId...", orgUniqgId)
         return await this.companyModel.find({ companyOrganizationId: orgUniqgId }, { companyUniqeId: 1, companyName: 1 });
     }
+
+    /**
+     * 
+     * @param companyId string
+     * @param updateData CompanyRequestDto
+     * @param oldData any
+     */
+    async updateCompanyById(companyId: string, updateData: CompanyRequestDto, oldData: any) {
+        try {
+            const newData = { ...oldData, ...updateData };
+            delete newData._id;
+            delete newData.companyName;
+            delete newData.companyCode;
+            delete newData.__v;
+            newData.updatedOn = new Date().toISOString();
+            const update = await this.companyModel.updateOne({ orgUniqueId: companyId }, { $set: newData })
+            if (update.ok) {
+                return 'Company updated successfully'
+            }
+            else {
+                return 'Company update failed'
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
 }

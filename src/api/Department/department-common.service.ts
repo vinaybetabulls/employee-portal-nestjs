@@ -94,7 +94,31 @@ export class DepartmentCommonservice {
         return await this.departmentModel.updateOne({ departmentUniqueId: deptUniqId }, { $set: { isActive: false } });
     }
 
+    /**
+     * 
+     * @param companyId : string
+     */
     async getDepartmentByCompanyId(companyId: string): Promise<any> {
         return await this.departmentModel.find({ companiesList: { $in: [companyId] } });
+    }
+
+    async updateDepartmentById(deptUniqId: string, updateRequest: DepartmentRequstDto, oldData: any): Promise<any> {
+        try {
+            const newData = { ...oldData, ...updateRequest };
+            delete newData._id;
+            delete newData.departmentName;
+            delete newData.departmentUniqueId;
+            delete newData.__v;
+            newData.updatedOn = new Date().toISOString();
+            const update = await this.departmentModel.updateOne({ departmentUniqueId: deptUniqId }, { $set: newData });
+            if (update.ok) {
+                return 'Department updated successfully';
+            }
+            else {
+                return 'Department update failed';
+            }
+        } catch (error) {
+            throw error;
+        }
     }
 }

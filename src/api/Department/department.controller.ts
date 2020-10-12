@@ -1,4 +1,4 @@
-import { Controller, Post, Headers, Body, HttpStatus, HttpException, Get, Param, Delete } from "@nestjs/common";
+import { Controller, Post, Headers, Body, HttpStatus, HttpException, Get, Param, Delete, Put } from "@nestjs/common";
 import { ApiBody, ApiHeader, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { UtilService } from "../Utils/utils.service";
 import { DepartmentRequstDto } from "./dto/department-request.dto";
@@ -42,9 +42,6 @@ export class DepartmentController {
         try {
             const token = await this.utilService.validateJSONToken(authorization);
             if (token.user.username === Admin.superAdminRole || _.includes(token.user.permissions, UserPermission.ADDITIONAL)) {
-
-                console.log('token..', token.user)
-                // get all list of organization
                 return this.departmentService.getDepartmentList(pageNumber, pageLimit);
             }
             else {
@@ -108,5 +105,20 @@ export class DepartmentController {
             throw error;
         }
     }
-
+    @Put('department/:departmentId')
+    @ApiOperation({ summary: 'Update department by departmentId' })
+    @ApiHeader({ name: 'token', description: 'authorization', required: true })
+    @ApiParam({ name: 'departmentId', description: 'Department unique id', type: String })
+    @ApiBody({ type: DepartmentRequstDto })
+    async updateDepartmentById(@Headers('token') authorization, @Param('departmentId') deptUniqid: string, @Body() request: DepartmentRequstDto) {
+        try {
+            const token = await this.utilService.validateJSONToken(authorization);
+            if (token.user.username !== Admin.superAdminRole && !_.includes(token.user.permissions, UserPermission.CREATE, UserPermission.ADDITIONAL)) {
+                throw new HttpException('Authorization', HttpStatus.FORBIDDEN)
+            }
+            return await this.departmentService.updateDepartmentById(deptUniqid, request);
+        } catch (error) {
+            throw error;
+        }
+    }
 }

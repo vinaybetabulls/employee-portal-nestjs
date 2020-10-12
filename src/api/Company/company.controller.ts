@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Get, Headers, HttpException, HttpStatus, Param, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Headers, HttpException, HttpStatus, Param, Post, Put } from "@nestjs/common";
 import { ApiBody, ApiHeader, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { request } from "express";
 import * as _ from "lodash";
 import * as Admin from '../../config/employee.default';
 import { UserPermission } from "../Employee/interfaces/employee.interface";
@@ -93,6 +94,22 @@ export class CompanyController {
         try {
             await this.utilService.validateJSONToken(authorization);
             return await this.companyService.getCompaniesByOrgId(orgUniqId);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    @Put('/:companyUniqId')
+    @ApiOperation({ summary: 'Get companies based on organization' })
+    @ApiHeader({ name: 'token', description: 'authorization', required: true })
+    @ApiParam({ name: 'companyUniqId', required: true })
+    async updateCompanyById(@Headers('token') authorization, @Param('companyUniqId') companyUniqId, @Body() request: CompanyRequestDto) {
+        try {
+            const token = await this.utilService.validateJSONToken(authorization);
+            if (token.user.username !== Admin.superAdminRole && !_.includes(token.user.permissions, UserPermission.EDIT, UserPermission.ADDITIONAL)) {
+                throw new HttpException('Authorization', HttpStatus.FORBIDDEN)
+            }
+            return await this.companyService.updateCompanyById(companyUniqId, request);
         } catch (error) {
             throw error;
         }

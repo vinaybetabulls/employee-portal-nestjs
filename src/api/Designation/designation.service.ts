@@ -85,12 +85,26 @@ export class DesignationService {
   }
 
   /**
-     * 
-     * @param desgUniqueId 
-     */
-  async updateDesignationById(desgUniqueId: string): Promise<any> {
+   * 
+   * @param desgUniqueId string
+   * @param updateDesignation DesignationDTO
+   */
+  async updateDesignationById(desgUniqueId: string, updateDesignation: DesignationDTO): Promise<any> {
     try {
-      return desgUniqueId;
+      const designation = await this.designationModel(desgUniqueId, updateDesignation);
+      const newData = { ...designation.toJSON(), ...updateDesignation };
+      delete newData.desgUniqueId;
+      delete newData.name;
+      delete newData.__v;
+      newData.updatedOn = new Date().toISOString();
+      const update = await this.designationModel.updateOne({ desgUniqueId: desgUniqueId }, { $set: newData });
+      if (update.ok) {
+        return 'Designation updated successfully'
+      }
+      else {
+        return 'Designation update failed'
+      }
+
     } catch (error) {
       throw error;
     }

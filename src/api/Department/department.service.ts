@@ -79,4 +79,19 @@ export class DepartmentService {
             throw error;
         }
     }
+
+    /**
+     * 
+     * @param deptUniqId 
+     * @param request 
+     */
+    async updateDepartmentById(deptUniqId: string, request: DepartmentRequstDto): Promise<any> {
+        try {
+            // check and get department details
+            const departmentId = await this.commonservice.getDepartmentById(deptUniqId);
+            return this.commonservice.updateDepartmentById(deptUniqId, request, departmentId[0].department.toJSON());
+        } catch (error) {
+            throw error;
+        }
+    }
 }

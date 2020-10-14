@@ -117,8 +117,9 @@ export class EmployeeCommonService {
     async getEmployeesList(pageNumber, pageLimit) {
         try {
             const limit = parseInt(pageLimit, 10) || 10; // limit to number
-            const page = parseInt(pageNumber) || 1; // pageNumber
+            const page = parseInt(pageNumber) + 1 || 1; // pageNumber
             const skip = (page - 1) * limit;// parse the skip to number
+            const totalEmployees = await this.employeeModel.find({ isActive: true });
             const empResponse = await this.employeeModel.aggregate([
                 {
                     $match: { $and: [{ userName: { $ne: 'superadmin' } }, { isActive: true }] }
@@ -149,7 +150,7 @@ export class EmployeeCommonService {
             return {
                 pageNo: pageNumber,
                 pageLimit: limit,
-                totalEmployees: empResponse.length,
+                totalEmployees: totalEmployees.length,
                 employees: empResponse
             }
         } catch (error) {

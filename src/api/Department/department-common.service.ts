@@ -37,8 +37,9 @@ export class DepartmentCommonservice {
      */
     async getDepartmentList(pageNumber, pageLimit): Promise<any> {
         const limit = parseInt(pageLimit, 10) || 10; // limit to number
-        const page = parseInt(pageNumber) || 1; // pageNumber
+        const page = parseInt(pageNumber) + 1 || 1; // pageNumber
         const skip = (page - 1) * limit; // parse the skip to number
+        const totalDepartments = await this.departmentModel.find({ isActive: true });
         const departmentResponse = await this.departmentModel.find({ isActive: true })
             .skip(skip)                 // use 'skip' first
             .limit(limit)
@@ -49,7 +50,7 @@ export class DepartmentCommonservice {
         return {
             pageNo: pageNumber,
             pageLimit: limit,
-            totalDepartments: departmentResponse.length,
+            totalDepartments: totalDepartments.length,
             departments: departmentResponse
         }
     }

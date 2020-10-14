@@ -19,8 +19,9 @@ export class DesignationService {
   async listOfDesignations(pageNumber: string, pageLimit: string): Promise<any> {
     try {
       const limit = parseInt(pageLimit, 10) || 10; // limit to number
-      const page = parseInt(pageNumber) || 1; // pageNumber
+      const page = parseInt(pageNumber) + 1 || 1; // pageNumber
       const skip = (page - 1) * limit;// parse the skip to number
+      const totalDesignations = await this.designationModel.find({ isActive: true })
       const designationsResponse = await this.designationModel.find({ isActive: true })
         .skip(skip)                 // use 'skip' first
         .limit(limit)
@@ -31,7 +32,7 @@ export class DesignationService {
       return {
         pageNo: pageNumber,
         pageLimit: limit,
-        totalCompanies: designationsResponse.length,
+        totalCompanies: totalDesignations.length,
         designations: designationsResponse
       }
     } catch (error) {

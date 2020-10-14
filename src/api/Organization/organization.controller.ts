@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Headers, HttpException, HttpStatus, Param, Post, Put } from "@nestjs/common";
-import { ApiBody, ApiHeader, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Delete, Get, Headers, HttpException, HttpStatus, Param, Post, Put, Query } from "@nestjs/common";
+import { ApiBody, ApiHeader, ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { request } from "express";
 import * as _ from "lodash";
 import * as Admin from '../../config/employee.default';
@@ -38,9 +38,9 @@ export class OrganizationController {
     @Get('/list')
     @ApiOperation({ summary: 'List of Organizations' })
     @ApiHeader({ name: 'token', description: 'authorization', required: true })
-    @ApiParam({ name: 'pageNumber', required: false })
-    @ApiParam({ name: 'pageLimit', required: false })
-    async listOfOrganizations(@Headers('token') authorization, @Param('pageNumber') pageNumber: string, @Param('pageLimit') pageLimit: string) {
+    @ApiQuery({ name: 'pageNumber', required: false })
+    @ApiQuery({ name: 'pageLimit', required: false })
+    async listOfOrganizations(@Headers('token') authorization, @Query('pageNumber') pageNumber: string, @Query('pageLimit') pageLimit: string) {
         try {
             const token = await this.utilService.validateJSONToken(authorization);
             if (token.user.username === Admin.superAdminRole || _.includes(token.user.permissions, UserPermission.ADDITIONAL)) {

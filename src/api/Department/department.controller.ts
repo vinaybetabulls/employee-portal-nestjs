@@ -1,5 +1,5 @@
-import { Controller, Post, Headers, Body, HttpStatus, HttpException, Get, Param, Delete, Put } from "@nestjs/common";
-import { ApiBody, ApiHeader, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { Controller, Post, Headers, Body, HttpStatus, HttpException, Get, Param, Delete, Put, Query } from "@nestjs/common";
+import { ApiBody, ApiHeader, ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { UtilService } from "../Utils/utils.service";
 import { DepartmentRequstDto } from "./dto/department-request.dto";
 import * as _ from "lodash";
@@ -36,9 +36,9 @@ export class DepartmentController {
     @Get('department/list')
     @ApiOperation({ summary: 'Get Departments List' })
     @ApiHeader({ name: 'token', description: 'authorization', required: true })
-    @ApiParam({ name: 'pageNumber', required: false })
-    @ApiParam({ name: 'pageLimit', required: false })
-    async listOfCompanies(@Headers('token') authorization, @Param('pageNumber') pageNumber: string, @Param('pageLimit') pageLimit: string) {
+    @ApiQuery({ name: 'pageNumber', required: false })
+    @ApiQuery({ name: 'pageLimit', required: false })
+    async listOfCompanies(@Headers('token') authorization, @Query('pageNumber') pageNumber: string, @Query('pageLimit') pageLimit: string) {
         try {
             const token = await this.utilService.validateJSONToken(authorization);
             if (token.user.username === Admin.superAdminRole || _.includes(token.user.permissions, UserPermission.ADDITIONAL)) {

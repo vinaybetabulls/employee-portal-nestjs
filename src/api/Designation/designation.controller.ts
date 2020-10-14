@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Headers, HttpException, HttpStatus, Param, Post, Put } from "@nestjs/common";
-import { ApiBody, ApiHeader, ApiOperation, ApiParam, ApiProperty, ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Delete, Get, Headers, HttpException, HttpStatus, Param, Post, Put, Query } from "@nestjs/common";
+import { ApiBody, ApiHeader, ApiOperation, ApiParam, ApiProperty, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { UtilService } from "../Utils/utils.service";
 import { DesignationService } from "./designation.service";
 import * as _ from "lodash";
@@ -16,9 +16,9 @@ export class DesignationController {
   @Get('list')
   @ApiOperation({ summary: 'Get All Designations' })
   @ApiHeader({ name: 'token', description: 'authorization', required: true })
-  @ApiParam({ name: 'pageNumber', required: false })
-  @ApiParam({ name: 'pageLimit', required: false })
-  async getDesignationsList(@Headers('token') authorization, @Param('pageNumber') pageNumber: string, @Param('pageLimit') pageLimit: string) {
+  @ApiQuery({ name: 'pageNumber', required: false })
+  @ApiQuery({ name: 'pageLimit', required: false })
+  async getDesignationsList(@Headers('token') authorization, @Query('pageNumber') pageNumber: string, @Query('pageLimit') pageLimit: string) {
     try {
       const token = await this.utilService.validateJSONToken(authorization);
       if (token.user.username === Admin.superAdminRole || _.includes(token.user.permissions, UserPermission.ADDITIONAL)) {

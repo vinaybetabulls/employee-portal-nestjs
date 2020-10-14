@@ -41,8 +41,9 @@ export class OrganizationCommonService {
      */
     async listOfOrganizations(pageNumber: string, pageLimit: string) {
         const limit = parseInt(pageLimit, 10) || 10; // limit to number
-        const page = parseInt(pageNumber) || 1; // pageNumber
+        const page = parseInt(pageNumber) + 1 || 1; // pageNumber
         const skip = (page - 1) * limit;// parse the skip to number
+        const totalOrganizatiosn = await this.organizationModel.find({ isActive: true });
         const orgResponse = await this.organizationModel.find({ isActive: true }).find({})
             .skip(skip)                 // use 'skip' first
             .limit(limit)
@@ -52,7 +53,7 @@ export class OrganizationCommonService {
         return {
             pageNo: pageNumber,
             pageLimit: limit,
-            totalCompanies: orgResponse.length,
+            totalOrganizaitons: totalOrganizatiosn.length,
             organizations: orgResponse
         }
     }

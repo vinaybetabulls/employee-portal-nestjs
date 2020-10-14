@@ -38,8 +38,9 @@ export class CompanyCommonService {
      */
     async getCompaniesList(pageNumber: string, pageLimit: string) {
         const limit = parseInt(pageLimit, 10) || 10; // limit to number
-        const page = parseInt(pageNumber) || 1; // pageNumber
+        const page = parseInt(pageNumber) + 1 || 1; // pageNumber
         const skip = (page - 1) * limit;// parse the skip to number
+        const totalCompanies = await this.companyModel.find({ isActive: true });
         const companyResponse = await this.companyModel.find({ isActive: true })
             .skip(skip)                 // use 'skip' first
             .limit(limit)
@@ -49,7 +50,7 @@ export class CompanyCommonService {
         return {
             pageNo: pageNumber,
             pageLimit: limit,
-            totalCompanies: companyResponse.length,
+            totalCompanies: totalCompanies.length,
             companies: companyResponse
         }
     }

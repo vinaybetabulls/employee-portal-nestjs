@@ -41,9 +41,45 @@ export class CompanyCommonService {
         const page = parseInt(pageNumber) + 1 || 1; // pageNumber
         const skip = (page - 1) * limit;// parse the skip to number
         const totalCompanies = await this.companyModel.find({ isActive: true });
-        const companyResponse = await this.companyModel.find({ isActive: true })
-            .skip(skip)                 // use 'skip' first
-            .limit(limit)
+        const companyResponse = await this.companyModel.aggregate([
+            {
+                '$match': {
+                    isActive: true
+                }
+            }, {
+                '$lookup': {
+                    'from': 'organizations',
+                    'localField': 'companyOrganizationId',
+                    'foreignField': 'orgUniqueId',
+                    'as': 'organizations'
+                }
+            }, {
+                '$unwind': {
+                    'path': '$organizations'
+                }
+            }, {
+                '$project': {
+                    'organizationName': '$organizations.organizationName',
+                    'companyCode': 1,
+                    'companyName': 1,
+                    'companyUniqeId': 1,
+                    'isActive': 1,
+                    'companyEmail': 1,
+                    'companyPhone': 1,
+                    'companyLogoURL': 1,
+                    'companyDescription': 1,
+                    'companyOrganizationId': 1,
+                    'companyAddress': 1
+                }
+            }
+            ,
+            {
+                $skip: skip
+            },
+            {
+                $limit: limit
+            }
+        ]);
         if (companyResponse.length === 0) {
             throw new HttpException('No companies available', HttpStatus.NOT_FOUND);
         }
@@ -60,7 +96,45 @@ export class CompanyCommonService {
      * @param companyId 
      */
     async getCompanyById(companyId: string) {
-        const company = await this.companyModel.find({ $and: [{ companyUniqeId: companyId }, { isActive: true }] });
+        // const company = await this.companyModel.find({ $and: [{ companyUniqeId: companyId }, { isActive: true }] });
+        const company = await this.companyModel.aggregate([
+            {
+                '$match': {
+                    '$and': [
+                        {
+                            'companyUniqeId': companyId
+                        }, {
+                            'isActive': true
+                        }
+                    ]
+                }
+            }, {
+                '$lookup': {
+                    'from': 'organizations',
+                    'localField': 'companyOrganizationId',
+                    'foreignField': 'orgUniqueId',
+                    'as': 'organizations'
+                }
+            }, {
+                '$unwind': {
+                    'path': '$organizations'
+                }
+            }, {
+                '$project': {
+                    'organizationName': '$organizations.organizationName',
+                    'companyCode': 1,
+                    'companyName': 1,
+                    'companyUniqeId': 1,
+                    'isActive': 1,
+                    'companyEmail': 1,
+                    'companyPhone': 1,
+                    'companyLogoURL': 1,
+                    'companyDescription': 1,
+                    'companyOrganizationId': 1,
+                    'companyAddress': 1
+                }
+            }
+        ])
         const departments = await this.departmentModel.find({ companiesList: { $in: [companyId] } })
         if (!company) {
             throw new HttpException('Company not existed', HttpStatus.NOT_FOUND);
@@ -69,6 +143,21 @@ export class CompanyCommonService {
             pageNo: 1,
             pageLimit: 10,
             totalCompanies: company.length,
+            companies: company,
+            department: departments
+        };
+    }
+    /**
+     * 
+     * @param companyId 
+     */
+    async getCompanyUniqById(companyId: string) {
+        const company = await this.companyModel.find({ $and: [{ companyUniqeId: companyId }, { isActive: true }] });
+        const departments = await this.departmentModel.find({ companiesList: { $in: [companyId] } })
+        if (!company) {
+            throw new HttpException('Company not existed', HttpStatus.NOT_FOUND);
+        }
+        return {
             companies: company,
             department: departments
         };
@@ -120,7 +209,7 @@ export class CompanyCommonService {
             delete newData.companyCode;
             delete newData.__v;
             newData.updatedOn = new Date().toISOString();
-            const update = await this.companyModel.updateOne({ orgUniqueId: companyId }, { $set: newData })
+            const update = await this.companyModel.updateOne({ companyUniqeId: companyId }, { $set: { companyEmail: newData.companyEmail, companyDescription: newData.companyDescription, companyAddress: newData.companyAddress, companyOrganizationId: newData.companyOrganizationId, companyLogoURL: newData.companyLogoURL } })
             if (update.ok) {
                 return 'Company updated successfully'
             }

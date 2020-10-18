@@ -102,8 +102,8 @@ export class CompanyService {
     async updateCompanyById(companyUniqeId: string, request: CompanyRequestDto) {
         try {
             // check company exists or not
-            const companyResponse = await this.commonService.getCompanyById(companyUniqeId);
-            await this.commonService.updateCompanyById(companyUniqeId, request, companyResponse.department[0].toJSON())
+            const companyResponse = await this.commonService.getCompanyUniqById(companyUniqeId);
+            await this.commonService.updateCompanyById(companyUniqeId, request, companyResponse.companies[0].toJSON())
         } catch (error) {
             throw error;
         }

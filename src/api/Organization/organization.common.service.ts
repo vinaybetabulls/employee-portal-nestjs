@@ -74,7 +74,6 @@ export class OrganizationCommonService {
             totalCompanies: 1,
             organizations: [org]
         }
-        return org;
     }
 
     /**

@@ -63,7 +63,6 @@ export class OrganizationController {
         try {
             await this.utilService.validateJSONToken(authorization);
             return await this.organizationService.getOrganizationByOrgId(orgId);
-
         } catch (error) {
             throw error;
         }

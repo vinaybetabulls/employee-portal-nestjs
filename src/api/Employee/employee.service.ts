@@ -178,4 +178,36 @@ export class EmployeeService {
             throw error;
         }
     }
+
+    /**
+     * updateEmployee
+     * @param empUniqueId string
+     * @param empNewData EmployeeCreateDto
+     */
+    async updateEmployee(empUniqueId: string, empNewData: EmployeeCreateDto): Promise<any> {
+        try {
+            // check emp exist
+            const empOldData = await this.commonService.getEmployeeById(empUniqueId);
+            // update employee data
+            return await this.commonService.updateEmployee(empUniqueId, empNewData, empOldData.toJSON());
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * 
+     * @param empUniqueId string
+     * @param pageNumber string
+     * @param pageLimit string
+     */
+    async getEmpListByOrgId(empUniqueId: string, pageNumber: string, pageLimit: string): Promise<any> {
+        try {
+            const empDetails = await this.getEmployeeById(empUniqueId);
+            const orgId = (empDetails.toJSON()).organization.id;
+            return this.commonService.getEmpListByOrgId(orgId, pageNumber, pageLimit);
+        } catch (error) {
+            throw error;
+        }
+    }
 }

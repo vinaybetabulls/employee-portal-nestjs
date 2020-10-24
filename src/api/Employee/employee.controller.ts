@@ -107,9 +107,14 @@ export class EmployeeController {
     async getEmployeesList(@Headers('token') authorization, @Query('pageNumber') pageNumber: string, @Query('pageLimit') pageLimit: string) {
         try {
             const token = await this.utilService.validateJSONToken(authorization);
-            if (token.user.username === Admin.superAdminRole || _.includes(token.user.permissions, UserPermission.ADDITIONAL)) {
+            if (token.user.username === Admin.superAdminRole || !_.includes(token.user.permissions, UserPermission.ADDITIONAL)) {
                 // get all list of organization
                 return this.employeeService.getCompaniesList(pageNumber, pageLimit);
+            }
+            else if (_.includes(token.user.permissions, UserPermission.ADDITIONAL)) {
+                // get all employee of a additional permission user organization
+                const empId = token.user.empUniqueId;
+                return this.employeeService.getEmpListByOrgId(empId, pageNumber, pageLimit);
             }
             else {
                 const empId = token.user.empUniqueId;
@@ -138,10 +143,29 @@ export class EmployeeController {
     @ApiOperation({ summary: 'Get employee permissions by using employee Id' })
     @ApiHeader({ name: 'token', description: 'authorization', required: true })
     @ApiParam({ name: 'empUniqeId', required: true, type: String })
-    async getEmployeePermissions(@Headers('token') authorization, @Param('empUniqeId') empUniqId: string) {
+    async getEmployeePermissions(@Headers('token') authorization: string, @Param('empUniqeId') empUniqId: string) {
         try {
             await this.utilService.validateJSONToken(authorization);
             return this.employeeService.getEmployeePermissions(empUniqId);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     *  update emmployee
+     * @param authorization 
+     * @param empUniqId 
+     */
+    @Put('/employee/update/:empUniqId')
+    @ApiOperation({ summary: 'Update employee details by empUniqId' })
+    @ApiHeader({ name: 'token', description: 'authorization', required: true })
+    @ApiParam({ name: 'empUniqeId', required: true, type: String })
+    @ApiBody({ type: EmployeeCreateDto, description: 'Edit employee' })
+    async updateEmployee(@Headers('token') authorization: string, @Param('empUniqueId') empUniqId: string, @Body() request: EmployeeCreateDto) {
+        try {
+            await this.utilService.validateJSONToken(authorization);
+            return await this.employeeService.updateEmployee(empUniqId, request);
         } catch (error) {
             throw error;
         }

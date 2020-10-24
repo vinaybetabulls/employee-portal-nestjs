@@ -221,4 +221,88 @@ export class CompanyCommonService {
         }
     }
 
+    /**
+     * 
+     * @param empUniqueId 
+     */
+    async getEmployeeOrganization(empUniqueId: string) {
+        try {
+            return await this.empModel.findOne({ empUniqueId: empUniqueId }, { organization: 1, empUniqueId: 1 });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * 
+     * @param organizationId string
+     * @param pageNumber string
+     * @param pageLimit string
+     */
+    async getCompanyByOrganizaitonId(organizationId: string, pageNumber: string, pageLimit: string) {
+        try {
+            const limit = parseInt(pageLimit, 10) || 10; // limit to number
+            const page = parseInt(pageNumber) + 1 || 1; // pageNumber
+            const skip = (page - 1) * limit;// parse the skip to number
+            const totalCompanies = await this.companyModel.find({
+                $and: [{
+                    isActive: true,
+
+                }, { companyOrganizationId: organizationId }]
+            });
+            const companyResponse = await this.companyModel.aggregate([
+                {
+                    '$match': {
+                        $and: [{
+                            isActive: true,
+
+                        }, { companyOrganizationId: organizationId }]
+                    }
+                }, {
+                    '$lookup': {
+                        'from': 'organizations',
+                        'localField': 'companyOrganizationId',
+                        'foreignField': 'orgUniqueId',
+                        'as': 'organizations'
+                    }
+                }, {
+                    '$unwind': {
+                        'path': '$organizations'
+                    }
+                }, {
+                    '$project': {
+                        'organizationName': '$organizations.organizationName',
+                        'companyCode': 1,
+                        'companyName': 1,
+                        'companyUniqeId': 1,
+                        'isActive': 1,
+                        'companyEmail': 1,
+                        'companyPhone': 1,
+                        'companyLogoURL': 1,
+                        'companyDescription': 1,
+                        'companyOrganizationId': 1,
+                        'companyAddress': 1
+                    }
+                }
+                ,
+                {
+                    $skip: skip
+                },
+                {
+                    $limit: limit
+                }
+            ]);
+            if (companyResponse.length === 0) {
+                throw new HttpException('No companies available', HttpStatus.NOT_FOUND);
+            }
+            return {
+                pageNo: pageNumber,
+                pageLimit: limit,
+                totalCompanies: totalCompanies.length,
+                companies: companyResponse
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
 }

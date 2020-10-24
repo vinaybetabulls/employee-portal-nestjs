@@ -108,4 +108,23 @@ export class CompanyService {
             throw error;
         }
     }
+
+    /**
+     * 
+     * @param empUiqId string
+     * @param pageNumbesr tring
+     * @param pageLimit string
+     */
+    async getCompaniesByAdminOrganization(empUiqId: string, pageNumber: string, pageLimit: string): Promise<any> {
+        try {
+            // get empOrg
+            const employeeOrganization = await this.commonService.getEmployeeOrganization(empUiqId);
+            // get companiesList by organizationId
+            const organizationId = (employeeOrganization.toJSON()).organization.id;
+            return await this.commonService.getCompanyByOrganizaitonId(organizationId, pageNumber, pageLimit);
+
+        } catch (error) {
+            throw error;
+        }
+    }
 }

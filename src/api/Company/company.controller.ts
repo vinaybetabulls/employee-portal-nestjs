@@ -42,9 +42,13 @@ export class CompanyController {
     async listOfCompanies(@Headers('token') authorization, @Query('pageNumber') pageNumber: string, @Query('pageLimit') pageLimit: string) {
         try {
             const token = await this.utilService.validateJSONToken(authorization);
-            if (token.user.username === Admin.superAdminRole || _.includes(token.user.permissions, UserPermission.ADDITIONAL)) {
+            if (token.user.username === Admin.superAdminRole || !_.includes(token.user.permissions, UserPermission.ADDITIONAL)) {
                 // get all list of organization
                 return this.companyService.getCompaniesList(pageNumber, pageLimit);
+            }
+            else if (_.includes(token.user.permissions, UserPermission.ADDITIONAL)) {
+                // get companies of a additional permission user
+                return this.companyService.getCompaniesByAdminOrganization(token.user.empUniqueId, pageNumber, pageLimit);
             }
             else {
                 const empId = token.user.empUniqueId;

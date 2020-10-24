@@ -42,7 +42,7 @@ export class OrganizationController {
     async listOfOrganizations(@Headers('token') authorization, @Query('pageNumber') pageNumber: string, @Query('pageLimit') pageLimit: string) {
         try {
             const token = await this.utilService.validateJSONToken(authorization);
-            if (token.user.username === Admin.superAdminRole || _.includes(token.user.permissions, UserPermission.ADDITIONAL)) {
+            if (token.user.username === Admin.superAdminRole || !_.includes(token.user.permissions, UserPermission.ADDITIONAL)) {
                 // get all list of organization
                 return this.organizationService.listOfOrganizations(pageNumber, pageLimit);
             }

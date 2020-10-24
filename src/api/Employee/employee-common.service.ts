@@ -236,4 +236,74 @@ export class EmployeeCommonService {
             throw error;
         }
     }
+
+    /**
+     * 
+     * @param empUniqueId string
+     * @param empOldData any
+     * @param empNewData any
+     */
+    async updateEmployee(empUniqueId: string, empOldData: any, empNewData: any) {
+        try {
+            const newData = { ...empOldData, ...empNewData };
+            delete newData._id;
+            delete newData.__v;
+            newData.updateOn = new Date().toISOString();
+            const update = await this.employeeModel.updateOne({ empUniqueId: empUniqueId }, { $set: newData });
+            if (update.ok) return 'Employee updated successfully.';
+            else return 'Employee update failed.'
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * 
+     * @param orgId string
+     * @param pageNumber string
+     * @param pageLimit string
+     */
+    async getEmpListByOrgId(orgId: string, pageNumber: string, pageLimit: string) {
+        try {
+            const limit = parseInt(pageLimit, 10) || 10; // limit to number
+            const page = parseInt(pageNumber) + 1 || 1; // pageNumber
+            const skip = (page - 1) * limit;// parse the skip to number
+            const totalEmployees = await this.employeeModel.find({ $and: [{ userName: { $ne: 'superadmin' } }, { isActive: true }, { 'organization.id': orgId }] });
+            const empResponse = await this.employeeModel.aggregate([
+                {
+                    $match: { $and: [{ userName: { $ne: 'superadmin' } }, { isActive: true }, { 'organization.id': orgId }] }
+                },
+                {
+                    $lookup:
+                    {
+                        from: "employeepermissions",
+                        localField: "empUniqueId",
+                        foreignField: "empUniqueId",
+                        as: "employeePermissions"
+                    }
+
+                },
+                {
+                    $skip: skip
+                },
+                {
+                    $limit: limit
+                }
+            ])
+            // const empResponse = await this.employeeModel.find({ $and: [{ userName: { $ne: 'superadmin' } }, { isActive: true }] })
+            //     .skip(skip)                 // use 'skip' first
+            //     .limit(limit)
+            if (empResponse.length === 0) {
+                throw new HttpException('No companies available', HttpStatus.NOT_FOUND);
+            }
+            return {
+                pageNo: pageNumber,
+                pageLimit: limit,
+                totalEmployees: totalEmployees.length,
+                employees: empResponse
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
 }

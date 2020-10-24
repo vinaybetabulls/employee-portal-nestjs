@@ -91,7 +91,6 @@ export class OrganizationController {
     @ApiBody({ type: OrganizationRequestDto })
     async updateOrganizationById(@Headers('token') authorization, @Param('orgUniqueId') orgId: string, @Body() request: OrganizationRequestDto) {
         try {
-            console.log('orgId..', orgId)
             const token = await this.utilService.validateJSONToken(authorization);
             if (token.user.username !== Admin.superAdminRole && !_.includes(token.user.permissions, UserPermission.EDIT, UserPermission.ADDITIONAL)) {
                 throw new HttpException('Authorization', HttpStatus.FORBIDDEN)

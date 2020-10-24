@@ -72,7 +72,6 @@ export class DepartmentController {
     @ApiParam({ name: 'empUniqId', description: 'Employee Unique Id', type: String })
     async getDepartmentByEmpId(@Headers('token') authorization, @Param('empUniqId') empUniqId) {
         try {
-            console.log('empUniqId..', empUniqId)
             await this.utilService.validateJSONToken(authorization);
             return await this.departmentService.getDepartmentByEmpId(empUniqId);
         } catch (error) {

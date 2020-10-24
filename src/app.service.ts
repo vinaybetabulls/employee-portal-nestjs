@@ -53,7 +53,7 @@ export class AppService {
       // save super admin into employees collection
       const superAdmin = new this.employeeModel(superAdminRequest);
       const superAdminResponse = await superAdmin.save();
-      const createPermissions = new this.empPermissionsModel({ empId: superAdminResponse.empId, empUniqueId: superAdminResponse.empUniqueId, permissions: [UserPermission.ADDITIONAL, UserPermission.CREATE, UserPermission.DELETE, UserPermission.EDIT, UserPermission.VIEW], roles: [Admin.superAdminRole] })
+      const createPermissions = new this.empPermissionsModel({ empId: superAdminResponse.empId, empUniqueId: superAdminResponse.empUniqueId, permissions: [UserPermission.CREATE, UserPermission.DELETE, UserPermission.EDIT, UserPermission.VIEW], roles: [Admin.superAdminRole] })
       const permissions = await createPermissions.save();
       return { superAdminResponse, permissions }
     } catch (error) {

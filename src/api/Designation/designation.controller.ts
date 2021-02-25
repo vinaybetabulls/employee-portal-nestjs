@@ -23,10 +23,10 @@ export class DesignationController {
       const token = await this.utilService.validateJSONToken(authorization);
       if (token.user.username === Admin.superAdminRole && !_.includes(token.user.permissions, UserPermission.ADDITIONAL)) {
         // get all list of organization
-        return this.designationService.listOfDesignations(pageNumber, pageLimit);
+        return await this.designationService.listOfDesignations(pageNumber, pageLimit);
       }
       else {
-        return this.designationService.listOfDesignations(pageNumber, pageLimit);
+        return await this.designationService.listOfDesignations(pageNumber, pageLimit);
       }
     } catch (error) {
       throw error;
@@ -70,6 +70,7 @@ export class DesignationController {
   @ApiOperation({ summary: 'Update Designation details' })
   @ApiHeader({ name: 'token', description: 'authorization', required: true })
   @ApiParam({ name: 'desgUniqueId' })
+  @ApiBody({type: DesignationDTO})
   async updateDesignationById(@Headers('token') authorization, @Param('desgUniqueId') desgId, @Body() DesignationDTO) {
     try {
       const token = await this.utilService.validateJSONToken(authorization);

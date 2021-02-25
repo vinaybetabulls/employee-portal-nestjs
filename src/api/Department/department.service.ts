@@ -41,7 +41,7 @@ export class DepartmentService {
      */
     async getDepartmentByEmpId(empId: string): Promise<any> {
         try {
-            return this.commonservice.getDepartmentByEmpId(empId);
+            return await this.commonservice.getDepartmentByEmpId(empId);
         } catch (error) {
             throw error;
         }

@@ -41,8 +41,8 @@ export class DepartmentController {
     async listOfCompanies(@Headers('token') authorization, @Query('pageNumber') pageNumber: string, @Query('pageLimit') pageLimit: string) {
         try {
             const token = await this.utilService.validateJSONToken(authorization);
-            if (token.user.username === Admin.superAdminRole && !_.includes(token.user.permissions, UserPermission.ADDITIONAL)) {
-                return this.departmentService.getDepartmentList(pageNumber, pageLimit);
+            if (token.user.username === Admin.superAdminRole || !_.includes(token.user.permissions, UserPermission.ADDITIONAL)) {
+                return await this.departmentService.getDepartmentList(pageNumber, pageLimit);
             }
             else {
                 const empId = token.user.empUniqueId;

@@ -16,7 +16,7 @@ export class DesignationService {
      * @param pageNumber 
      * @param pageLimit 
      */
-  async listOfDesignations(pageNumber: string, pageLimit: string): Promise<any> {
+  async listOfDesignations(pageNumber?: string, pageLimit?: string): Promise<any> {
     try {
       const limit = parseInt(pageLimit, 10) || 10; // limit to number
       const page = parseInt(pageNumber) + 1 || 1; // pageNumber
@@ -29,11 +29,13 @@ export class DesignationService {
       if (designationsResponse.length === 0) {
         throw new HttpException('No designations found', HttpStatus.NOT_FOUND);
       }
-      return {
-        pageNo: pageNumber,
-        pageLimit: limit,
-        totalCompanies: totalDesignations.length,
-        designations: designationsResponse
+      else {
+        return {
+          pageNo: pageNumber,
+          pageLimit: limit,
+          totalCompanies: totalDesignations.length,
+          designations: designationsResponse
+        }
       }
     } catch (error) {
       throw error;;
@@ -92,7 +94,8 @@ export class DesignationService {
    */
   async updateDesignationById(desgUniqueId: string, updateDesignation: DesignationDTO): Promise<any> {
     try {
-      const designation = await this.designationModel(desgUniqueId, updateDesignation);
+      const designation = await this.designationModel.findOne({desgUniqueId});
+      console.log("designation..", designation)
       const newData = { ...designation.toJSON(), ...updateDesignation };
       delete newData.desgUniqueId;
       delete newData.name;

@@ -107,7 +107,7 @@ export class DepartmentCommonservice {
         try {
             const newData = { ...oldData, ...updateRequest };
             delete newData._id;
-            delete newData.departmentName;
+            delete oldData.departmentName;
             delete newData.departmentUniqueId;
             delete newData.__v;
             newData.updatedOn = new Date().toISOString();

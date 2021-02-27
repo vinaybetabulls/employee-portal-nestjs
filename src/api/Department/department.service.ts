@@ -89,7 +89,7 @@ export class DepartmentService {
         try {
             // check and get department details
             const departmentId = await this.commonservice.getDepartmentById(deptUniqId);
-            return this.commonservice.updateDepartmentById(deptUniqId, request, departmentId[0].department.toJSON());
+            return await this.commonservice.updateDepartmentById(deptUniqId, request, departmentId?.department.toJSON());
         } catch (error) {
             throw error;
         }

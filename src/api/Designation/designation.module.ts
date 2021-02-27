@@ -11,4 +11,7 @@ import { UtilService } from '../Utils/utils.service';
   controllers: [DesignationController],
   providers: [DesignationService, ...DesignationProviders, UtilService]
 })
-export class DesignationModule {}
+export class DesignationModule {
+
+  
+}

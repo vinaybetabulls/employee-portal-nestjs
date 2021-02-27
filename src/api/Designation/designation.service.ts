@@ -95,10 +95,9 @@ export class DesignationService {
   async updateDesignationById(desgUniqueId: string, updateDesignation: DesignationDTO): Promise<any> {
     try {
       const designation = await this.designationModel.findOne({desgUniqueId});
-      console.log("designation..", designation)
       const newData = { ...designation.toJSON(), ...updateDesignation };
       delete newData.desgUniqueId;
-      delete newData.name;
+      // delete newData.name;
       delete newData.__v;
       newData.updatedOn = new Date().toISOString();
       const update = await this.designationModel.updateOne({ desgUniqueId: desgUniqueId }, { $set: newData });

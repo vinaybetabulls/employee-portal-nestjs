@@ -120,7 +120,7 @@ export class EmployeeCreateDto {
 
     @ApiProperty({ name: 'workType', description: 'Employee work type' })
     @IsString()
-    wrokType!: string;
+    workType!: string;
 
     @ApiProperty({ name: 'bloodGroup', description: 'Employee blood group' })
     @IsString()

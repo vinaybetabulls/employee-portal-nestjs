@@ -157,15 +157,15 @@ export class EmployeeController {
      * @param authorization 
      * @param empUniqId 
      */
-    @Put('/employee/update/:empUniqId')
+    @Put('/employee/update/:empUniqueId')
     @ApiOperation({ summary: 'Update employee details by empUniqId' })
     @ApiHeader({ name: 'token', description: 'authorization', required: true })
-    @ApiParam({ name: 'empUniqeId', required: true, type: String })
+    @ApiParam({ name: 'empUniqueId', required: true, type: String })
     @ApiBody({ type: EmployeeCreateDto, description: 'Edit employee' })
-    async updateEmployee(@Headers('token') authorization: string, @Param('empUniqueId') empUniqId: string, @Body() request: EmployeeCreateDto) {
+    async updateEmployee(@Headers('token') authorization: string, @Param('empUniqueId') empUniqueId: string, @Body() request: EmployeeCreateDto) {
         try {
             await this.utilService.validateJSONToken(authorization);
-            return await this.employeeService.updateEmployee(empUniqId, request);
+            return await this.employeeService.updateEmployee(empUniqueId, request);
         } catch (error) {
             throw error;
         }

@@ -243,8 +243,9 @@ export class EmployeeCommonService {
      * @param empOldData any
      * @param empNewData any
      */
-    async updateEmployee(empUniqueId: string, empOldData: any, empNewData: any) {
+    async updateEmployee(empUniqueId: string, empNewData: any, empOldData: any) {
         try {
+            delete empOldData.employeeAddress;
             const newData = { ...empOldData, ...empNewData };
             delete newData._id;
             delete newData.__v;

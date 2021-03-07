@@ -114,15 +114,35 @@ export class EmployeeCommonService {
      * @param pageNumber 
      * @param pageLimit 
      */
-    async getEmployeesList(pageNumber, pageLimit) {
+    async getEmployeesList(pageNumber, pageLimit, search = null) {
         try {
             const limit = parseInt(pageLimit, 10) || 10; // limit to number
             const page = parseInt(pageNumber) + 1 || 1; // pageNumber
             const skip = (page - 1) * limit;// parse the skip to number
             const totalEmployees = await this.employeeModel.find({ isActive: true });
+            let match;
+            if (search === null) {
+                match =
+                    { $and: [{ userName: { $ne: 'superadmin' } }, { isActive: true }] }
+
+            }
+            else {
+                match = {
+                    $and: [
+                        { $and: [{ userName: { $ne: 'superadmin' } }, { isActive: true }] },
+                        {
+                            $or: [
+                                { "empId": { "$regex": search, "$options": "i" } },
+                                { "userName": { "$regex": search, "$options": "i" } },
+                                { "email": { "$regex": search, "$options": "i" } }
+                            ]
+                        }
+                    ]
+                }
+            }
             const empResponse = await this.employeeModel.aggregate([
                 {
-                    $match: { $and: [{ userName: { $ne: 'superadmin' } }, { isActive: true }] }
+                    $match: match
                 },
                 {
                     $lookup:
@@ -264,15 +284,35 @@ export class EmployeeCommonService {
      * @param pageNumber string
      * @param pageLimit string
      */
-    async getEmpListByOrgId(orgId: string, pageNumber: string, pageLimit: string) {
+    async getEmpListByOrgId(orgId: string, pageNumber: string, pageLimit: string, search = null) {
         try {
             const limit = parseInt(pageLimit, 10) || 10; // limit to number
             const page = parseInt(pageNumber) + 1 || 1; // pageNumber
             const skip = (page - 1) * limit;// parse the skip to number
             const totalEmployees = await this.employeeModel.find({ $and: [{ userName: { $ne: 'superadmin' } }, { isActive: true }, { 'organization.id': orgId }] });
+            let match;
+            if (search === null) {
+                match =
+                { $and: [{ userName: { $ne: 'superadmin' } }, { isActive: true }, { 'organization.id': orgId }] }
+
+            }
+            else {
+                match = {
+                    $and: [
+                        { $and: [{ userName: { $ne: 'superadmin' } }, { isActive: true }, { 'organization.id': orgId }] },
+                        {
+                            $or: [
+                                { "empId": { "$regex": search, "$options": "i" } },
+                                { "userName": { "$regex": search, "$options": "i" } },
+                                { "email": { "$regex": search, "$options": "i" } }
+                            ]
+                        }
+                    ]
+                }
+            }
             const empResponse = await this.employeeModel.aggregate([
                 {
-                    $match: { $and: [{ userName: { $ne: 'superadmin' } }, { isActive: true }, { 'organization.id': orgId }] }
+                    $match: match
                 },
                 {
                     $lookup:

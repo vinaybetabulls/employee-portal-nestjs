@@ -32,9 +32,9 @@ export class CompanyService {
      * @param pageNumber 
      * @param pageLimit 
      */
-    async getCompaniesList(pageNumber: string, pageLimit: string): Promise<any> {
+    async getCompaniesList(pageNumber: string, pageLimit: string, search = null): Promise<any> {
         try {
-            return await this.commonService.getCompaniesList(pageNumber, pageLimit);
+            return await this.commonService.getCompaniesList(pageNumber, pageLimit, search);
         } catch (error) {
             throw error;
         }

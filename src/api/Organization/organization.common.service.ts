@@ -39,12 +39,31 @@ export class OrganizationCommonService {
      * @param pageNumber 
      * @param pageLimit 
      */
-    async listOfOrganizations(pageNumber: string, pageLimit: string) {
+    async listOfOrganizations(pageNumber: string, pageLimit: string, search=null) {
         const limit = parseInt(pageLimit, 10) || 10; // limit to number
         const page = parseInt(pageNumber) + 1 || 1; // pageNumber
         const skip = (page - 1) * limit;// parse the skip to number
         const totalOrganizatiosn = await this.organizationModel.find({ isActive: true });
-        const orgResponse = await this.organizationModel.find({ isActive: true }).find({})
+        let match;
+        if (search === null) {
+            match = {
+                isActive: true
+            }
+        }
+        else {
+            match = {
+                $and: [
+                    { isActive: true },
+                    {
+                        $or: [
+                            { "organizationName": { "$regex": search, "$options": "i" } },
+                            { "organizationCode": { "$regex": search, "$options": "i" } }
+                        ]
+                    }
+                ]
+            }
+        }
+        const orgResponse = await this.organizationModel.find(match).find({})
             .skip(skip)                 // use 'skip' first
             .limit(limit)
         if (orgResponse.length === 0) {

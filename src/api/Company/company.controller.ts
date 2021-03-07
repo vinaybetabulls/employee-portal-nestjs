@@ -39,12 +39,12 @@ export class CompanyController {
     @ApiHeader({ name: 'token', description: 'authorization', required: true })
     @ApiQuery({ name: 'pageNumber', required: false })
     @ApiQuery({ name: 'pageLimit', required: false })
-    async listOfCompanies(@Headers('token') authorization, @Query('pageNumber') pageNumber: string, @Query('pageLimit') pageLimit: string) {
+    async listOfCompanies(@Headers('token') authorization, @Query('pageNumber') pageNumber: string, @Query('pageLimit') pageLimit: string, @Query('search') search: String) {
         try {
             const token = await this.utilService.validateJSONToken(authorization);
             if (token.user.username === Admin.superAdminRole || !_.includes(token.user.permissions, UserPermission.ADDITIONAL)) {
                 // get all list of organization
-                return this.companyService.getCompaniesList(pageNumber, pageLimit);
+                return this.companyService.getCompaniesList(pageNumber, pageLimit, search);
             }
             else if (_.includes(token.user.permissions, UserPermission.ADDITIONAL)) {
                 // get companies of a additional permission user

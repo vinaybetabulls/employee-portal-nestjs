@@ -36,16 +36,33 @@ export class CompanyCommonService {
      * @param pageNumber 
      * @param pageLimit 
      */
-    async getCompaniesList(pageNumber: string, pageLimit: string) {
+    async getCompaniesList(pageNumber: string, pageLimit: string, search = null) {
         const limit = parseInt(pageLimit, 10) || 10; // limit to number
         const page = parseInt(pageNumber) + 1 || 1; // pageNumber
         const skip = (page - 1) * limit;// parse the skip to number
         const totalCompanies = await this.companyModel.find({ isActive: true });
+        let match;
+        if (search === null) {
+            match = {
+                isActive: true
+            }
+        }
+        else {
+            match = {
+                $and: [
+                    { isActive: true },
+                    {
+                        $or: [
+                            { "companyName": { "$regex": search, "$options": "i" } },
+                            { "companyCode": { "$regex": search, "$options": "i" } }
+                        ]
+                    }
+                ]
+            }
+        }
         const companyResponse = await this.companyModel.aggregate([
             {
-                '$match': {
-                    isActive: true
-                }
+                '$match': match
             }, {
                 '$lookup': {
                     'from': 'organizations',

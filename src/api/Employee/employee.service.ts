@@ -135,9 +135,9 @@ export class EmployeeService {
      * @param pageNumber 
      * @param pageLimit 
      */
-    async getCompaniesList(pageNumber: string, pageLimit: string) {
+    async getCompaniesList(pageNumber: string, pageLimit: string, search=null) {
         try {
-            return await this.commonService.getEmployeesList(pageNumber, pageLimit);
+            return await this.commonService.getEmployeesList(pageNumber, pageLimit, search);
         } catch (error) {
             throw error;
         }
@@ -201,11 +201,11 @@ export class EmployeeService {
      * @param pageNumber string
      * @param pageLimit string
      */
-    async getEmpListByOrgId(empUniqueId: string, pageNumber: string, pageLimit: string): Promise<any> {
+    async getEmpListByOrgId(empUniqueId: string, pageNumber: string, pageLimit: string, search=null): Promise<any> {
         try {
             const empDetails = await this.getEmployeeById(empUniqueId);
             const orgId = (empDetails.toJSON()).organization.id;
-            return this.commonService.getEmpListByOrgId(orgId, pageNumber, pageLimit);
+            return this.commonService.getEmpListByOrgId(orgId, pageNumber, pageLimit, search);
         } catch (error) {
             throw error;
         }

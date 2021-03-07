@@ -36,9 +36,9 @@ export class OrganizationService {
      * @param pageNumber 
      * @param pageLimit 
      */
-    async listOfOrganizations(pageNumber: string, pageLimit: string): Promise<any> {
+    async listOfOrganizations(pageNumber: string, pageLimit: string, search = null): Promise<any> {
         try {
-            return this.commonService.listOfOrganizations(pageNumber, pageLimit)
+            return this.commonService.listOfOrganizations(pageNumber, pageLimit, search)
         } catch (error) {
             throw error;;
         }
